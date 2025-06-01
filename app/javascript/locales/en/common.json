@@ -26,11 +26,34 @@
     "join_discord": "Join Discord",
     "leave_discord": "Leave Discord",
     "discord_joined": "You've been added to the Discord server #{{serverName}}!",
-    "discord_left": "You've left the Discord server #{{serverName}}."
+    "discord_left": "You've left the Discord server #{{serverName}}.",
+    "comment_posted": "Successfully posted your comment",
+    "comment_deleted": "Successfully deleted the comment",
+    "comment_updated": "Successfully updated the comment",
+    "edit": "Edit",
+    "delete": "Delete",
+    "update": "Update",
+    "updating": "Updating...",
+    "reply": "Reply"
   },
   "errors": {
     "something_went_wrong": "Something went wrong.",
     "discord_join_failed": "Could not join the Discord server, please try again.",
-    "discord_leave_failed": "Could not leave the Discord server."
+    "discord_leave_failed": "Could not leave the Discord server.",
+    "loading_comments_failed": "An error occurred while loading more comments",
+    "deleting_comment_failed": "An error occurred while deleting the comment",
+    "posting_comment_failed": "An error occurred while posting your comment - {{error}}",
+    "updating_comment_failed": "An error occurred while updating the comment - {{error}}"
+  },
+  "comments": {
+    "comment_singular": "comment",
+    "comment_plural": "comments",
+    "to_join_conversation": "to join the conversation",
+    "write_comment_placeholder": "Write a comment"
+  },
+  "authentication": {
+    "log_in": "Log in",
+    "register": "Register",
+    "or": "or"
   }
 }

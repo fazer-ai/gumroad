@@ -1,6 +1,7 @@
 import cx from "classnames";
 import { parseISO } from "date-fns";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import {
   addComment as addCommentRequest,
@@ -45,6 +46,7 @@ type CommentWithReplies = Comment & { replies: CommentWithReplies[] };
 
 type Props = { paginated_comments: PaginatedComments };
 export const PostCommentsSection = ({ paginated_comments }: Props) => {
+  const { t } = useTranslation('common');
   const { commentable_id, purchase_id } = useCommentsMetadata();
   const loggedInUser = useLoggedInUser();
 
@@ -62,7 +64,7 @@ export const PostCommentsSection = ({ paginated_comments }: Props) => {
       setData({ ...data, pagination: loaded.pagination, comments: [...data.comments, ...loaded.comments] });
     } catch (e) {
       assertResponseError(e);
-      showAlert("An error occurred while loading more comments", "error");
+      showAlert(t("errors.loading_comments_failed"), "error");
     }
     setLoadingMore(false);
   };
@@ -76,7 +78,7 @@ export const PostCommentsSection = ({ paginated_comments }: Props) => {
         purchase_id,
         id: commentToDelete.comment.id,
       });
-      showAlert("Successfully deleted the comment", "success");
+      showAlert(t("actions.comment_deleted"), "success");
       setCommentToDelete(null);
       setData((data) => ({
         ...data,
@@ -85,7 +87,7 @@ export const PostCommentsSection = ({ paginated_comments }: Props) => {
       }));
     } catch (e) {
       assertResponseError(e);
-      showAlert("An error occurred while deleting the comment", "error");
+      showAlert(t("errors.deleting_comment_failed"), "error");
     }
   };
 
@@ -111,11 +113,11 @@ export const PostCommentsSection = ({ paginated_comments }: Props) => {
         content: draft,
         parent_id: null,
       });
-      showAlert("Successfully posted your comment", "success");
+      showAlert(t("actions.comment_posted"), "success");
       upsertComment(comment);
     } catch (e) {
       assertResponseError(e);
-      showAlert(`An error occurred while posting your comment - ${e.message}`, "error");
+      showAlert(t("errors.posting_comment_failed", { error: e.message }), "error");
     }
     setPosting(false);
   };
@@ -128,7 +130,7 @@ export const PostCommentsSection = ({ paginated_comments }: Props) => {
   return (
     <section className="comments comments-section" style={{ display: "grid", gap: "var(--spacer-6)" }}>
       <h2>
-        {data.count} {data.count === 1 ? "comment" : "comments"}
+        {data.count} {data.count === 1 ? t("comments.comment_singular") : t("comments.comment_plural")}
       </h2>
       <CommentTextarea value={draft || ""} onChange={(event) => setDraft(event.target.value)} disabled={posting}>
         <Button
@@ -136,7 +138,7 @@ export const PostCommentsSection = ({ paginated_comments }: Props) => {
           disabled={!(loggedInUser || purchase_id) || !draft || posting}
           onClick={() => void addComment()}
         >
-          {posting ? "Posting..." : "Post"}
+          {posting ? t("actions.posting") : t("actions.post")}
         </Button>
       </CommentTextarea>
       {nestedComments.length > 0 ? <hr /> : null}
@@ -153,7 +155,7 @@ export const PostCommentsSection = ({ paginated_comments }: Props) => {
       {data.pagination.next !== null ? (
         <div style={{ display: "flex", justifyContent: "center", marginTop: "var(--spacer-6)" }}>
           <Button disabled={loadingMore} onClick={() => void loadMoreComments()}>
-            {loadingMore ? "Loading more comments..." : "Load more comments"}
+            {loadingMore ? t("actions.loading_more_comments") : t("actions.load_more_comments")}
           </Button>
         </div>
       ) : null}
@@ -163,25 +165,25 @@ export const PostCommentsSection = ({ paginated_comments }: Props) => {
           open
           allowClose={commentToDelete.deleting}
           onClose={() => setCommentToDelete(null)}
-          title="Delete comment"
+          title={t("actions.delete_comment")}
           footer={
             <>
               <Button disabled={commentToDelete.deleting} onClick={() => setCommentToDelete(null)}>
-                Cancel
+                {t("actions.cancel")}
               </Button>
               {commentToDelete.deleting ? (
                 <Button color="danger" disabled>
-                  Deleting...
+                  {t("actions.deleting")}
                 </Button>
               ) : (
                 <Button color="danger" onClick={() => void deleteComment()}>
-                  Confirm
+                  {t("actions.confirm")}
                 </Button>
               )}
             </>
           }
         >
-          <h4>Are you sure?</h4>
+          <h4>{t("actions.are_you_sure")}</h4>
         </Modal>
       ) : null}
     </section>
@@ -194,6 +196,7 @@ type CommentContainerProps = {
   confirmCommentDeletion: (comment: Comment) => void;
 };
 const CommentContainer = ({ comment, upsertComment, confirmCommentDeletion }: CommentContainerProps) => {
+  const { t } = useTranslation('common');
   const { seller_id, purchase_id, max_allowed_depth, commentable_id } = useCommentsMetadata();
   const loggedInUser = useLoggedInUser();
   const [isPosting, setIsPosting] = React.useState(false);
@@ -208,11 +211,11 @@ const CommentContainer = ({ comment, upsertComment, confirmCommentDeletion }: Co
         id: comment.id,
         content: editDraft,
       });
-      showAlert("Successfully updated the comment", "success");
+      showAlert(t("actions.comment_updated"), "success");
       upsertComment(updated);
     } catch (e) {
       assertResponseError(e);
-      showAlert(`An error occurred while updating the comment - ${e.message}`, "error");
+      showAlert(t("errors.updating_comment_failed", { error: e.message }), "error");
     }
     setIsPosting(false);
   };
@@ -227,12 +230,12 @@ const CommentContainer = ({ comment, upsertComment, confirmCommentDeletion }: Co
         content: replyDraft,
         parent_id: comment.id,
       });
-      showAlert("Successfully posted your comment", "success");
+      showAlert(t("actions.comment_posted"), "success");
       setReplyDraft(null);
       upsertComment(reply);
     } catch (e) {
       assertResponseError(e);
-      showAlert(`An error occurred while posting your comment - ${e.message}`, "error");
+      showAlert(t("errors.posting_comment_failed", { error: e.message }), "error");
     }
     setIsPosting(false);
   };
@@ -251,11 +254,11 @@ const CommentContainer = ({ comment, upsertComment, confirmCommentDeletion }: Co
                 {(close) => (
                   <div style={{ display: "grid", gap: "var(--spacer-3)" }} onClick={close}>
                     {comment.is_editable ? (
-                      <Button onClick={() => setEditDraft(comment.content.original)}>Edit</Button>
+                      <Button onClick={() => setEditDraft(comment.content.original)}>{t("actions.edit")}</Button>
                     ) : null}
                     {comment.is_deletable ? (
                       <Button color="danger" onClick={() => confirmCommentDeletion(comment)}>
-                        Delete
+                        {t("actions.delete")}
                       </Button>
                     ) : null}
                   </div>
@@ -272,11 +275,11 @@ const CommentContainer = ({ comment, upsertComment, confirmCommentDeletion }: Co
             showAvatar={false}
           >
             <Button onClick={() => setEditDraft(null)} disabled={isPosting}>
-              Cancel
+              {t("actions.cancel")}
             </Button>
 
             <Button color="primary" disabled={isPosting} onClick={() => void update()}>
-              {isPosting ? "Updating..." : "Update"}
+              {isPosting ? t("actions.updating") : t("actions.update")}
             </Button>
           </CommentTextarea>
         ) : (
@@ -285,7 +288,7 @@ const CommentContainer = ({ comment, upsertComment, confirmCommentDeletion }: Co
         {replyDraft == null && comment.depth < max_allowed_depth ? (
           <footer>
             <button className="link" onClick={() => setReplyDraft("")}>
-              Reply
+              {t("actions.reply")}
             </button>
           </footer>
         ) : null}
@@ -297,7 +300,7 @@ const CommentContainer = ({ comment, upsertComment, confirmCommentDeletion }: Co
           disabled={isPosting}
         >
           <Button onClick={() => setReplyDraft(null)} disabled={isPosting}>
-            Cancel
+            {t("actions.cancel")}
           </Button>
 
           <Button
@@ -305,7 +308,7 @@ const CommentContainer = ({ comment, upsertComment, confirmCommentDeletion }: Co
             disabled={!(loggedInUser || purchase_id) || isPosting}
             onClick={() => void postReply()}
           >
-            {isPosting ? "Posting..." : "Post"}
+            {isPosting ? t("actions.posting") : t("actions.post")}
           </Button>
         </CommentTextarea>
       ) : null}
@@ -327,6 +330,7 @@ const CommentTextarea = ({
   showAvatar = true,
   ...props
 }: React.ComponentProps<"textarea"> & { showAvatar?: boolean }) => {
+  const { t } = useTranslation('common');
   const appDomain = useAppDomain();
   const { purchase_id } = useCommentsMetadata();
   const loggedInUser = useLoggedInUser();
@@ -344,11 +348,11 @@ const CommentTextarea = ({
         <img className="user-avatar" alt="Current user avatar" src={loggedInUser?.avatarUrl ?? defaultUserAvatar} />
       ) : null}
       {loggedInUser || purchase_id ? (
-        <textarea ref={ref} rows={1} placeholder="Write a comment" {...props} />
+        <textarea ref={ref} rows={1} placeholder={t("comments.write_comment_placeholder")} {...props} />
       ) : (
         <div>
-          <a href={Routes.login_url({ host: appDomain })}>Log in</a> or{" "}
-          <a href={Routes.signup_url({ host: appDomain })}>Register</a> to join the conversation
+          <a href={Routes.login_url({ host: appDomain })}>{t("authentication.log_in")}</a> {t("authentication.or")}{" "}
+          <a href={Routes.signup_url({ host: appDomain })}>{t("authentication.register")}</a> {t("comments.to_join_conversation")}
         </div>
       )}
       {loggedInUser != null || purchase_id != null ? (

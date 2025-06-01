@@ -1,5 +1,14 @@
 {
-  "forgot_password": {
+  "sign_up": "Sign up",
+  "log_in": "Log in",
+  "login": "Login",
+  "logging_in": "Logging in...",
+  "email": "Email",
+  "password": "Password",
+  "forgot_password": "Forgot your password?",
+  "or": "or",
+  "connect_app_to_gumroad": "Connect {{appName}} to Gumroad",
+  "forgot_password_form": {
     "password_reset_sent": "Password reset sent! Please make sure to check your spam folder.",
     "email_label": "Email to send reset instructions to",
     "sending": "Sending...",
