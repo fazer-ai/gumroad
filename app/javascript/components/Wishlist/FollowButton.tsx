@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { followWishlist, unfollowWishlist } from "$app/data/wishlists";
 import { assertResponseError } from "$app/utils/request";
@@ -20,6 +21,7 @@ export const useFollowWishlist = ({
   wishlistName: string;
   initialValue: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const location = useOriginalLocation();
   const loggedInUser = useLoggedInUser();
   const { appDomain } = useDomains();
@@ -39,7 +41,9 @@ export const useFollowWishlist = ({
       await action({ wishlistId });
       setIsFollowing(!isFollowing);
       showAlert(
-        isFollowing ? `You are no longer following ${wishlistName}.` : `You are now following ${wishlistName}!`,
+        isFollowing 
+          ? t("actions.no_longer_following", { name: wishlistName })
+          : t("actions.now_following", { name: wishlistName }),
         "success",
       );
     } catch (e) {
@@ -65,6 +69,7 @@ export const FollowButton = ({
   wishlistName: string;
   initialValue: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const { isFollowing, isLoading, toggleFollowing } = useFollowWishlist({
     wishlistId,
     wishlistName,
@@ -72,16 +77,16 @@ export const FollowButton = ({
   });
 
   return isFollowing ? (
-    <WithTooltip tip="Unfollow">
+    <WithTooltip tip={t("actions.unfollow")}>
       <Button onClick={() => void toggleFollowing()} color="primary" disabled={isLoading}>
         <Icon name="bookmark-check-fill" />
-        Following
+        {t("actions.following")}
       </Button>
     </WithTooltip>
   ) : (
     <Button onClick={() => void toggleFollowing()} disabled={isLoading}>
       <Icon name="bookmark-plus" />
-      Follow wishlist
+      {t("actions.follow_wishlist")}
     </Button>
   );
 };
