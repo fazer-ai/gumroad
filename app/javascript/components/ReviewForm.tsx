@@ -1,5 +1,6 @@
 import { DirectUpload } from "@rails/activestorage";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { setProductRating } from "$app/data/product_reviews";
 import { assertDefined } from "$app/utils/assert";
@@ -104,6 +105,7 @@ export const ReviewForm = React.forwardRef<
     style?: React.CSSProperties;
   }
 >(({ permalink, purchaseId, purchaseEmailDigest, review, onChange, preview, disabledStatus, style }, ref) => {
+  const { t } = useTranslation('common');
   const [isLoading, setIsLoading] = React.useState(false);
   const [rating, setRating] = React.useState<number | null>(review?.rating ?? null);
   const [message, setMessage] = React.useState(review?.message ?? "");
@@ -226,7 +228,7 @@ export const ReviewForm = React.forwardRef<
       setMessage(review.message ?? "");
       setReviewMode(review.video ? "video" : "text");
 
-      showAlert("Review submitted successfully!", "success");
+      showAlert(t("actions.review_submitted_successfully"), "success");
     } catch (error) {
       assertResponseError(error);
       showAlert(error.message, "error");

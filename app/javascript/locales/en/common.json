@@ -43,7 +43,8 @@
     "wishlist_discoverable": "Wishlist is now discoverable!",
     "collaborator_removed_successfully": "The collaborator was removed successfully.",
     "approved": "Approved",
-    "affiliate_removed_successfully": "The affiliate was removed successfully."
+    "affiliate_removed_successfully": "The affiliate was removed successfully.",
+    "review_submitted_successfully": "Review submitted successfully!"
   },
   "errors": {
     "something_went_wrong": "Something went wrong.",
