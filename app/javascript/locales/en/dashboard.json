@@ -1,0 +1,22 @@
+{
+  "actions": {
+    "duplicating_notification": "Duplicating the product. You will be notified once it's ready.",
+    "product_duplicated": "{{name}} is duplicated",
+    "product_deleted": "Product deleted!",
+    "product_archived": "Product was archived successfully",
+    "product_unarchived": "Product was unarchived successfully",
+    "open_product_menu": "Open product action menu",
+    "duplicate": "Duplicate",
+    "duplicating": "Duplicating...",
+    "archive": "Archive",
+    "archiving": "Archiving...",
+    "unarchive": "Unarchive",
+    "unarchiving": "Unarchiving...",
+    "delete_permanently": "Delete permanently",
+    "deleting": "Deleting...",
+    "delete_product": "Delete Product",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "confirm_delete_product": "Are you sure you want to delete {{name}}?"
+  }
+}

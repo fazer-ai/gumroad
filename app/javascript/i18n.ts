@@ -6,6 +6,7 @@ import commonEn from './locales/en/common.json';
 import checkoutEn from './locales/en/checkout.json';
 import authenticationEn from './locales/en/authentication.json';
 import settingsEn from './locales/en/settings.json';
+import dashboardEn from './locales/en/dashboard.json';
 
 const resources = {
   en: {
@@ -14,6 +15,7 @@ const resources = {
     checkout: checkoutEn,
     authentication: authenticationEn,
     settings: settingsEn,
+    dashboard: dashboardEn,
   },
 };
 
