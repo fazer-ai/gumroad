@@ -12,5 +12,14 @@
     "dashboard": "Dashboard",
     "log_in": "Log in",
     "start_selling": "Start selling"
+  },
+  "actions": {
+    "product_archived": "Product archived!",
+    "product_unarchived": "Product unarchived!",
+    "archive_from_library": "Archive from library",
+    "unarchive_from_library": "Unarchive from library"
+  },
+  "errors": {
+    "something_went_wrong": "Something went wrong."
   }
 }
