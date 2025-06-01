@@ -1,5 +1,6 @@
 import cx from "classnames";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { FormFieldName, PayoutMethod } from "$app/components/server-components/Settings/PaymentsPage";
 
@@ -24,29 +25,30 @@ const PayPalEmailSection = ({
   updatePayoutMethod: (payoutMethod: PayoutMethod) => void;
   errorFieldNames: Set<FormFieldName>;
 }) => {
+  const { t } = useTranslation('settings');
   const uid = React.useId();
   return (
     <section style={{ display: "grid", gap: "var(--spacer-6)" }}>
       {showPayPalPayoutsFeeNote ? (
         <div className="info" role="status">
-          PayPal payouts are subject to a 2% processing fee.
+          {t("payments.paypal_fee_note")}
         </div>
       ) : null}
       <div>{feeInfoText}</div>
       <div>
         {countrySupportsNativePayouts && !isFormDisabled ? (
           <button className="link" onClick={() => updatePayoutMethod("bank")}>
-            Switch to direct deposit
+            {t("payments.switch_to_direct_deposit")}
           </button>
         ) : null}
         <fieldset className={cx({ danger: errorFieldNames.has("paypal_email_address") })}>
           <legend>
-            <label htmlFor={`${uid}-paypal-email`}>PayPal Email</label>
+            <label htmlFor={`${uid}-paypal-email`}>{t("payments.paypal_email")}</label>
           </legend>
           <input
             type="email"
             id={`${uid}-paypal-email`}
-            placeholder="PayPal Email"
+            placeholder={t("payments.paypal_email")}
             value={paypalEmailAddress || ""}
             disabled={isFormDisabled}
             aria-invalid={errorFieldNames.has("paypal_email_address")}
@@ -55,7 +57,7 @@ const PayPalEmailSection = ({
         </fieldset>
         {hasConnectedStripe ? (
           <div role="alert" className="warning">
-            You cannot change your payout method to PayPal because you have a stripe account connected.
+            {t("payments.cannot_change_to_paypal")}
           </div>
         ) : null}
       </div>
