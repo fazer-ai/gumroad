@@ -1,0 +1,14 @@
+{
+  "navigation": {
+    "overview": "Overview",
+    "products": "Products",
+    "sales": "Sales",
+    "analytics": "Analytics",
+    "settings": "Settings"
+  },
+  "labels": {
+    "total_sales": "Total Sales",
+    "revenue": "Revenue",
+    "customers": "Customers"
+  }
+}

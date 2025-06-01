@@ -1,0 +1,15 @@
+en:
+  mailers:
+    common:
+      greeting: "Hello"
+      regards: "Best regards"
+      team_signature: "The Gumroad Team"
+    purchase:
+      subject: "Your purchase confirmation"
+      thank_you: "Thank you for your purchase!"
+    refund:
+      subject: "A sale has been refunded"
+      notification: "A refund has been processed"
+    notifications:
+      new_sale: "You have a new sale!"
+      payout_ready: "Your payout is ready"
