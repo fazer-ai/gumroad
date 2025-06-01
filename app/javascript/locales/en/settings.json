@@ -4,5 +4,21 @@
     "switch_to_direct_deposit": "Switch to direct deposit",
     "paypal_email": "PayPal Email",
     "cannot_change_to_paypal": "You cannot change your payout method to PayPal because you have a stripe account connected."
+  },
+  "profile": {
+    "changes_saved": "Changes saved!",
+    "title": "Profile",
+    "username": "Username",
+    "view_profile_at": "View your profile at",
+    "name": "Name",
+    "bio": "Bio",
+    "social_links": "Social links",
+    "disconnect_from_x": "Disconnect {{handle}} from X",
+    "connect_to_x": "Connect to X",
+    "design": "Design",
+    "font": "Font",
+    "background_color": "Background color",
+    "highlight_color": "Highlight color",
+    "preview": "Preview"
   }
 }
