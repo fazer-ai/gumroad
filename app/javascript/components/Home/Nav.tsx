@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useCurrentSeller } from "$app/components/CurrentSeller";
 import { useAppDomain, useDiscoverUrl } from "$app/components/DomainSettings";
@@ -57,6 +58,7 @@ const NavLink = ({
 };
 
 export const Nav = () => {
+  const { t } = useTranslation('common');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const currentSeller = useCurrentSeller();
   const appDomain = useAppDomain();
@@ -64,19 +66,19 @@ export const Nav = () => {
 
   const navLinks = (
     <>
-      <NavLink text="Discover" href={discoverUrl} />
-      <NavLink text="About" href={Routes.about_url()} />
-      <NavLink text="Features" href={Routes.features_url()} />
-      <NavLink text="Pricing" href={Routes.pricing_url()} />
+      <NavLink text={t("navigation.discover")} href={discoverUrl} />
+      <NavLink text={t("navigation.about")} href={Routes.about_url()} />
+      <NavLink text={t("navigation.features")} href={Routes.features_url()} />
+      <NavLink text={t("navigation.pricing")} href={Routes.pricing_url()} />
     </>
   );
 
   const authLinks = currentSeller ? (
-    <NavLink text="Dashboard" href={Routes.dashboard_url({ host: appDomain })} category="button" />
+    <NavLink text={t("navigation.dashboard")} href={Routes.dashboard_url({ host: appDomain })} category="button" />
   ) : (
     <>
-      <NavLink text="Log in" href={Routes.login_url()} category="button" />
-      <NavLink text="Start selling" href={Routes.signup_url()} category="button" context="primary" />
+      <NavLink text={t("navigation.log_in")} href={Routes.login_url()} category="button" />
+      <NavLink text={t("navigation.start_selling")} href={Routes.signup_url()} category="button" context="primary" />
     </>
   );
 
