@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { getSearchResults, ProductFilter, SearchRequest, SearchResults } from "$app/data/search";
 import { SORT_KEYS, PROFILE_SORT_KEYS } from "$app/parsers/product";
@@ -36,6 +37,7 @@ export type Action =
   | { type: "load-more" };
 
 export const useSearchReducer = (initial: Omit<State, "offset">) => {
+  const { t } = useTranslation('common');
   const activeRequest = React.useRef<{ cancel: () => void } | null>(null);
 
   const [state, dispatch] = React.useReducer(
@@ -83,7 +85,7 @@ export const useSearchReducer = (initial: Omit<State, "offset">) => {
       } catch (e) {
         if (!(e instanceof AbortError)) {
           assertResponseError(e);
-          showAlert("Something went wrong. Please try refreshing the page.", "error");
+          showAlert(t("errors.something_went_wrong_refresh"), "error");
         }
       }
     }),
@@ -159,6 +161,7 @@ export const CardGrid = ({
   hideSort,
   pagination = "scroll",
 }: Props) => {
+  const { t } = useTranslation('common');
   const currencySymbol = getShortCurrencySymbol(currencyCode);
   const gridRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -177,7 +180,7 @@ export const CardGrid = ({
   const trySetPrice = (minPrice: number | null, maxPrice: number | null) => {
     if (minPrice == null || maxPrice == null || maxPrice > minPrice) {
       updateParams({ min_price: minPrice ?? undefined, max_price: maxPrice ?? undefined });
-    } else showAlert("Please set the price minimum to be lower than the maximum.", "error");
+    } else showAlert(t("errors.price_minimum_lower_than_maximum"), "error");
   };
   const resetFilters = () => dispatchAction({ type: "set-params", params: defaults });
 
