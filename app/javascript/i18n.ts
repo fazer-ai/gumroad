@@ -3,11 +3,15 @@ import { initReactI18next } from 'react-i18next';
 
 import productEn from './locales/en/product.json';
 import commonEn from './locales/en/common.json';
+import checkoutEn from './locales/en/checkout.json';
+import authenticationEn from './locales/en/authentication.json';
 
 const resources = {
   en: {
     product: productEn,
     common: commonEn,
+    checkout: checkoutEn,
+    authentication: authenticationEn,
   },
 };
 

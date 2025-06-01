@@ -1,0 +1,10 @@
+{
+  "forgot_password": {
+    "password_reset_sent": "Password reset sent! Please make sure to check your spam folder.",
+    "email_label": "Email to send reset instructions to",
+    "sending": "Sending...",
+    "send": "Send",
+    "cancel": "Cancel",
+    "or": "or"
+  }
+}

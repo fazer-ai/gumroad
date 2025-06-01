@@ -1,0 +1,46 @@
+{
+  "form": {
+    "country": "Country",
+    "state": "State",
+    "province": "Province", 
+    "county": "County",
+    "zip_code": "ZIP code",
+    "postal": "Postal",
+    "email_address": "Email address",
+    "your_email_address": "Your email address",
+    "contact_information": "Contact information",
+    "shipping_information": "Shipping information",
+    "keep_on_file": "Keep on file",
+    "full_name": "Full name",
+    "street_address": "Street address",
+    "city": "City"
+  },
+  "email": {
+    "did_you_mean": "Did you mean {{suggestion}}?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "address_verification": {
+    "you_entered": "You entered this address:",
+    "we_recommend": "We recommend using this format:",
+    "no_continue": "No, continue",
+    "use_suggested": "Use suggested"
+  },
+  "gift": {
+    "give_as_gift": "Give as a gift?",
+    "recipient_email": "Recipient email",
+    "recipient_email_address": "Recipient email address",
+    "message": "Message",
+    "personalized_message": "A personalized message (optional)",
+    "email_hidden": "{{name}}'s email has been hidden for privacy purposes.",
+    "cancel_gift_option": "Cancel gift option",
+    "reset_gift_option": "Reset gift option?",
+    "no_cancel": "No, cancel",
+    "yes_reset": "Yes, reset",
+    "switch_off_gift": "You are about to switch off the gift option. To gift this wishlist again, you will need to return to the wishlist page and select \"Gift this product\".",
+    "membership_note": "Note: Free trials will be charged immediately. The membership will not auto-renew. The recipient must update the payment method to renew the membership."
+  },
+  "errors": {
+    "something_went_wrong": "Sorry, something went wrong. You were not charged."
+  }
+}
