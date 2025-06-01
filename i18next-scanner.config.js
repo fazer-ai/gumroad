@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   input: [
     'app/javascript/**/*.{js,jsx,ts,tsx}',
     '!app/javascript/**/*.spec.{js,jsx,ts,tsx}',

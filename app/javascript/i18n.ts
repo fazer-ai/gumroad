@@ -1,8 +1,13 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
+import productEn from './locales/en/product.json';
+import commonEn from './locales/en/common.json';
+
 const resources = {
   en: {
+    product: productEn,
+    common: commonEn,
   },
 };
 

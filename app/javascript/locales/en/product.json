@@ -1,0 +1,17 @@
+{
+  "cta": {
+    "purchase_again": "Purchase again",
+    "subscribe": "Subscribe", 
+    "rent": "Rent",
+    "i_want_this": "I want this!",
+    "pay_in_installments": "Pay in {{count}} installments"
+  },
+  "button_text": {
+    "i_want_this_prompt": "I want this!",
+    "buy_this_prompt": "Buy this",
+    "pay_prompt": "Pay",
+    "donate_prompt": "Donate",
+    "support_prompt": "Support",
+    "tip_prompt": "Tip"
+  }
+}

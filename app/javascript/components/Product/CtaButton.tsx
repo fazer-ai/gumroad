@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { trackUserProductAction } from "$app/data/user_action_event";
 import { CustomButtonTextOption } from "$app/parsers/product";
@@ -47,16 +48,15 @@ export const trackCtaClick = ({
   }).catch(assertResponseError);
 };
 
-// TODO replace this with a free-form input
 const ctaNames = {
-  i_want_this_prompt: "I want this!",
-  buy_this_prompt: "Buy this",
-  pay_prompt: "Pay",
-  donate_prompt: "Donate",
-  support_prompt: "Support",
-  tip_prompt: "Tip",
+  i_want_this_prompt: "button_text.i_want_this_prompt",
+  buy_this_prompt: "button_text.buy_this_prompt",
+  pay_prompt: "button_text.pay_prompt",
+  donate_prompt: "button_text.donate_prompt",
+  support_prompt: "button_text.support_prompt",
+  tip_prompt: "button_text.tip_prompt",
 };
-export const getCtaName = (cta: CustomButtonTextOption) => ctaNames[cta];
+export const getCtaName = (cta: CustomButtonTextOption, t: (key: string) => string) => t(ctaNames[cta]);
 
 const PARAMETERS_NOT_INHERITED_FROM_URL = new Set([
   "code",
@@ -79,6 +79,7 @@ const PARAMETERS_NOT_INHERITED_FROM_URL = new Set([
 
 export const CtaButton = React.forwardRef<HTMLAnchorElement, Props>(
   ({ product, purchase, discountCode, selection, label, onClick, showInstallmentPlanNotes = false }, ref) => {
+    const { t } = useTranslation('product');
     const { searchParams } = new URL(useOriginalLocation());
 
     const [referrer, setReferrer] = React.useState("");
@@ -147,20 +148,20 @@ export const CtaButton = React.forwardRef<HTMLAnchorElement, Props>(
         <NavigationButton ref={ref} href={url.toString()} color="accent" {...buttonCommonProps}>
           {label ??
             (purchase
-              ? "Purchase again"
+              ? t("cta.purchase_again")
               : product.recurrences
-                ? "Subscribe"
+                ? t("cta.subscribe")
                 : selection.rent
-                  ? "Rent"
+                  ? t("cta.rent")
                   : product.custom_button_text_option
-                    ? getCtaName(product.custom_button_text_option)
-                    : "I want this!")}
+                    ? getCtaName(product.custom_button_text_option, t)
+                    : t("cta.i_want_this"))}
         </NavigationButton>
 
         {product.installment_plan && product.installment_plan.number_of_installments > 1 ? (
           <>
             <NavigationButton color="black" href={urlWithInstallments.toString()} {...buttonCommonProps}>
-              Pay in {product.installment_plan.number_of_installments} installments
+              {t("cta.pay_in_installments", { count: product.installment_plan.number_of_installments })}
             </NavigationButton>
             {showInstallmentPlanNotes ? (
               <small className="text-center">
