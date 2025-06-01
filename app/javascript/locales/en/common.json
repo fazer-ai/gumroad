@@ -40,7 +40,8 @@
     "unpublished": "Unpublished!",
     "wishlist_deleted": "Wishlist deleted!",
     "opted_out_discover": "Opted out of Gumroad Discover.",
-    "wishlist_discoverable": "Wishlist is now discoverable!"
+    "wishlist_discoverable": "Wishlist is now discoverable!",
+    "collaborator_removed_successfully": "The collaborator was removed successfully."
   },
   "errors": {
     "something_went_wrong": "Something went wrong.",
@@ -58,7 +59,10 @@
     "updating_comment_failed": "An error occurred while updating the comment - {{error}}",
     "files_still_uploading": "Some files are still uploading, please wait...",
     "images_still_uploading": "Some images are still uploading, please wait...",
-    "must_publish_before_share": "Not yet! You've got to publish your awesome product before you can share it with your audience and the world."
+    "must_publish_before_share": "Not yet! You've got to publish your awesome product before you can share it with your audience and the world.",
+    "failed_remove_collaborator": "Failed to remove the collaborator.",
+    "at_least_one_product_selected": "At least one product must be selected",
+    "collaborator_cut_max_50_percent": "Collaborator cut must be 50% or less"
   },
   "comments": {
     "comment_singular": "comment",
