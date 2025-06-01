@@ -55,5 +55,10 @@
     "log_in": "Log in",
     "register": "Register",
     "or": "or"
+  },
+  "wishlists": {
+    "title": "Wishlists",
+    "wishlist_singular": "wishlist",
+    "wishlist_plural": "wishlists"
   }
 }

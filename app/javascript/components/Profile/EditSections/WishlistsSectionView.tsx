@@ -1,5 +1,6 @@
 import sortBy from "lodash/sortBy";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { ReactSortable as Sortable } from "react-sortablejs";
 
 import { WishlistsSection } from "$app/data/profile_settings";
@@ -12,6 +13,7 @@ import { showAlert } from "$app/components/server-components/Alert";
 import { CardWishlist, DummyCardGrid } from "$app/components/Wishlist/Card";
 
 export const WishlistsSectionView = ({ section }: { section: WishlistsSection }) => {
+  const { t } = useTranslation('common');
   const [state, dispatch] = useReducer();
   const uid = React.useId();
   const selectedWishlistsCount = state.wishlist_options.filter((wishlist) =>
@@ -56,8 +58,8 @@ export const WishlistsSectionView = ({ section }: { section: WishlistsSection })
       menuItems={[
         <EditorSubmenu
           key="0"
-          heading="Wishlists"
-          text={`${selectedWishlistsCount} ${selectedWishlistsCount === 1 ? "wishlist" : "wishlists"}`}
+          heading={t("wishlists.title")}
+          text={`${selectedWishlistsCount} ${selectedWishlistsCount === 1 ? t("wishlists.wishlist_singular") : t("wishlists.wishlist_plural")}`}
         >
           <div className="paragraphs" style={{ maxHeight: "min(100vh, 500px)", overflow: "auto" }}>
             {wishlists.length > 0 ? (
