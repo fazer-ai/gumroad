@@ -95,5 +95,19 @@ module Gumroad
 
     config.flipper.strict = false
     config.flipper.test_help = false
+
+    # I18n configuration
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+    config.i18n.available_locales = [:en]
+    config.i18n.default_locale = :en
+    config.i18n.fallbacks = [I18n.default_locale]
+    config.i18n.exception_handler = lambda do |exception, locale, key, options|
+      if exception.is_a?(I18n::MissingTranslation)
+        Rails.logger.warn "Missing translation: #{key} for locale #{locale}"
+        "translation missing: #{locale}.#{key}"
+      else
+        raise exception
+      end
+    end
   end
 end

@@ -24,7 +24,9 @@ module RenderingExtension
       logged_in_user: logged_in_user_props(pundit_user, is_impersonating: view_context.controller.impersonating?),
       current_seller: current_seller_props(pundit_user),
       csp_nonce: SecureHeaders.content_security_policy_script_nonce(view_context.request),
-      locale: view_context.controller.http_accept_language.user_preferred_languages[0] || "en-US"
+      locale: I18n.locale.to_s,
+      available_locales: I18n.available_locales.map(&:to_s),
+      user_preferred_locale: view_context.controller.http_accept_language.user_preferred_languages[0] || "en-US"
     }
   end
 

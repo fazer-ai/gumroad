@@ -1,0 +1,13 @@
+en:
+  checkout:
+    steps:
+      payment: "Payment"
+      confirmation: "Confirmation"
+      complete: "Complete"
+    labels:
+      billing_address: "Billing Address"
+      payment_method: "Payment Method"
+      order_summary: "Order Summary"
+    messages:
+      processing: "Processing your order..."
+      success: "Order completed successfully!"
