@@ -39,6 +39,7 @@
   "errors": {
     "something_went_wrong": "Something went wrong.",
     "something_went_wrong_refresh": "Something went wrong. Please try refreshing the page.",
+    "sorry_something_went_wrong": "Sorry, something went wrong. Please try again.",
     "price_minimum_lower_than_maximum": "Please set the price minimum to be lower than the maximum.",
     "discord_join_failed": "Could not join the Discord server, please try again.",
     "discord_leave_failed": "Could not leave the Discord server.",

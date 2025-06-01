@@ -1,6 +1,7 @@
 import { lightFormat } from "date-fns";
 import pickBy from "lodash/pickBy";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { createCast } from "ts-safe-cast";
 
 import {
@@ -104,6 +105,7 @@ const AnalyticsPage = ({
   country_codes: Record<string, string>;
   state_names: Record<string, string>;
 }) => {
+  const { t } = useTranslation('common');
   const [products, setProducts] = React.useState(
     initialProducts.map((product) => ({ ...product, selected: product.alive })),
   );
@@ -134,7 +136,7 @@ const AnalyticsPage = ({
         activeRequests.current = null;
       } catch (e) {
         if (e instanceof AbortError) return;
-        showAlert("Sorry, something went wrong. Please try again.", "error");
+        showAlert(t("errors.sorry_something_went_wrong"), "error");
       }
     };
     void loadData();
