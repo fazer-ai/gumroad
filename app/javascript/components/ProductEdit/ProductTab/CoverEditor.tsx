@@ -1,6 +1,7 @@
 import { DirectUpload } from "@rails/activestorage";
 import * as React from "react";
 import { ReactSortable as Sortable } from "react-sortablejs";
+import { useTranslation } from "react-i18next";
 
 import { CoverPayload, createCover, deleteCover } from "$app/data/covers";
 import { AssetPreview } from "$app/parsers/product";
@@ -31,6 +32,7 @@ export const CoverEditor = ({
   setCovers: (covers: AssetPreview[]) => void;
   permalink: string;
 }) => {
+  const { t } = useTranslation('common');
   const [activeCoverId, setActiveCoverId] = React.useState(covers[0]?.id ?? null);
   const [isUploaderOpen, setIsUploaderOpen] = React.useState(false);
   const [isUploading, setIsUploading] = React.useState(false);
@@ -129,6 +131,7 @@ const CoverUploader = ({
   isUploading: boolean;
   setIsUploading: (isUploading: boolean) => void;
 }) => {
+  const { t } = useTranslation('common');
   const [isSelecting, setIsSelecting] = React.useState(false);
 
   const [uploader, setUploader] = React.useState<{ type: "url"; value: string } | null>(null);
@@ -165,7 +168,7 @@ const CoverUploader = ({
 
                 for (const file of event.target.files) {
                   if (!FileUtils.isFileNameExtensionAllowed(file.name, ALLOWED_EXTENSIONS)) {
-                    showAlert("Invalid file type.", "error");
+                    showAlert(t("errors.invalid_file_type"), "error");
                     continue;
                   }
                   // TODO change the relevant endpoint(s) to allow uploading multiple files at once

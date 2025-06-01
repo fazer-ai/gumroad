@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { fetchServerInfo } from "$app/data/discord_integration";
 import { DISCORD_CLIENT_ID, DISCORD_OAUTH_URL } from "$app/utils/integrations";
@@ -23,6 +24,7 @@ export const DiscordIntegrationEditor = ({
   integration: DiscordIntegration;
   onChange: (integration: DiscordIntegration) => void;
 }) => {
+  const { t } = useTranslation('common');
   const { product, updateProduct } = useProductEditContext();
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -85,12 +87,12 @@ export const DiscordIntegrationEditor = ({
                         });
                         setEnabledForOptions(true);
                       } else {
-                        showAlert("Could not connect to your Discord account, please try again.", "error");
+                        showAlert(t("errors.discord_connection_failed"), "error");
                       }
                       setIsLoading(false);
                     },
                     onError: () => {
-                      showAlert("Could not connect to your Discord account, please try again.", "error");
+                      showAlert(t("errors.discord_connection_failed"), "error");
                       setIsLoading(false);
                     },
                     onPopupClose: () => setIsLoading(false),

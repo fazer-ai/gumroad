@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { unfollowWishlist } from "$app/data/wishlists";
 import { assertResponseError } from "$app/utils/request";
@@ -31,16 +32,17 @@ const WishlistsFollowingPage = ({
   wishlists: Wishlist[];
   reviews_page_enabled: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const [wishlists, setWishlists] = React.useState<Wishlist[]>(preloadedWishlists);
 
   const destroy = async (wishlist: Wishlist) => {
     setWishlists(wishlists.filter(({ id }) => id !== wishlist.id));
     try {
       await unfollowWishlist({ wishlistId: wishlist.id });
-      showAlert(`You are no longer following ${wishlist.name}.`, "success");
+      showAlert(t("actions.no_longer_following", { name: wishlist.name }), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
   };
 

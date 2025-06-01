@@ -2,6 +2,7 @@ import cx from "classnames";
 import * as React from "react";
 import { useState } from "react";
 import { cast, createCast, is } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { CreateProductData, RecurringProductType, createProduct } from "$app/data/products";
 import { ProductNativeType, ProductServiceType } from "$app/parsers/product";
@@ -35,6 +36,7 @@ const NewProductPage = ({
   show_orientation_text: boolean;
   eligible_for_service_products: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const formUID = React.useId();
 
   const nameInputRef = React.useRef<HTMLInputElement>(null);
@@ -94,7 +96,7 @@ const NewProductPage = ({
       }
     } catch (e) {
       assertResponseError(e);
-      showAlert("Something went wrong.", "error");
+      showAlert(t("errors.something_went_wrong"), "error");
       setIsSubmitting(false);
     }
   };

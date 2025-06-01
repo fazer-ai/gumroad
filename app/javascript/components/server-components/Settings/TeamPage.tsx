@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cast, createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   ROLES,
@@ -76,6 +77,7 @@ const AddTeamMembersSection = ({
   refreshMemberInfos: () => void;
   options: Option[];
 }) => {
+  const { t } = useTranslation('common');
   const emailUID = React.useId();
   const roleUID = React.useId();
 
@@ -89,7 +91,7 @@ const AddTeamMembersSection = ({
     const result = await createTeamInvitation(teamInvitation);
     if (result.success) {
       refreshMemberInfos();
-      showAlert("Invitation sent!", "success");
+      showAlert(t("actions.invitation_sent"), "success");
       updateTeamInvitation({ email: "", role: null });
     } else showAlert(result.error_message, "error");
     setLoading(false);
@@ -162,6 +164,7 @@ const TeamMembersSection = ({
   memberInfos: MemberInfo[];
   refreshMemberInfos: () => void;
 }) => {
+  const { t } = useTranslation('common');
   const currentSeller = useCurrentSeller();
   const [loading, setLoading] = React.useState(false);
   const [confirming, setConfirming] = React.useState<MemberInfo | null>(null);
@@ -194,7 +197,7 @@ const TeamMembersSection = ({
         case "resend_invitation": {
           await resendInvitation(memberInfo);
           refreshMemberInfos();
-          showAlert("Invitation sent!", "success");
+          showAlert(t("actions.invitation_sent"), "success");
           break;
         }
         default: {
@@ -203,7 +206,10 @@ const TeamMembersSection = ({
             await updateMember(memberInfo, newRole);
             refreshMemberInfos();
             showAlert(
-              `Role for ${memberInfo.name !== "" ? memberInfo.name : memberInfo.email} has changed to ${ROLE_TITLES[newRole]}`,
+              t("actions.role_changed", { 
+                name: memberInfo.name !== "" ? memberInfo.name : memberInfo.email,
+                role: ROLE_TITLES[newRole]
+              }),
               "success",
             );
             break;
@@ -235,7 +241,9 @@ const TeamMembersSection = ({
                 await restoreMember(deletedMember);
                 refreshMemberInfos();
                 showAlert(
-                  `${deletedMember.name !== "" ? deletedMember.name : deletedMember.email} was added back to the team`,
+                  t("actions.member_added_back_to_team", {
+                    name: deletedMember.name !== "" ? deletedMember.name : deletedMember.email
+                  }),
                   "success",
                 );
                 setDeletedMember(null);

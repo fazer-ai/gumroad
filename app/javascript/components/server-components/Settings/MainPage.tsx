@@ -1,6 +1,7 @@
 import cx from "classnames";
 import * as React from "react";
 import { cast, createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { SettingPage } from "$app/parsers/settings";
 import { asyncVoid } from "$app/utils/promise";
@@ -58,6 +59,7 @@ type Props = {
 };
 
 const MainPage = (props: Props) => {
+  const { t } = useTranslation('common');
   const uid = React.useId();
   const [formErrors, setFormErrors] = React.useState<Record<"email", boolean>>({
     email: false,
@@ -88,11 +90,11 @@ const MainPage = (props: Props) => {
       });
       const responseData = cast<{ success: boolean }>(await response.json());
       if (!responseData.success) throw new ResponseError();
-      showAlert("Confirmation email resent!", "success");
+      showAlert(t("actions.confirmation_email_resent"), "success");
       setResentConfirmationEmail(true);
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
 
     setIsResendingConfirmationEmail(false);
@@ -102,7 +104,7 @@ const MainPage = (props: Props) => {
     if (props.is_form_disabled) return;
 
     if (userSettings.email === "") {
-      showAlert("Please enter an email address!", "error");
+      showAlert(t("errors.please_enter_email_address"), "error");
       setFormErrors((prev) => ({ ...prev, email: true }));
       emailInputRef.current?.focus();
       return;
@@ -119,13 +121,13 @@ const MainPage = (props: Props) => {
       });
       const responseData = cast<{ success: true } | { success: false; error_message: string }>(await response.json());
       if (responseData.success) {
-        showAlert("Your account has been updated!", "success");
+        showAlert(t("actions.account_updated"), "success");
       } else {
         showAlert(responseData.error_message, "error");
       }
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
 
     setIsSaving(false);
@@ -536,6 +538,7 @@ const MainPage = (props: Props) => {
 };
 
 const InvalidateActiveSessionsSection = () => {
+  const { t } = useTranslation('common');
   const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] = React.useState(false);
   const [isInvalidating, setIsInvalidating] = React.useState(false);
 
@@ -548,7 +551,7 @@ const InvalidateActiveSessionsSection = () => {
       location.reload();
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
 
     setIsConfirmationDialogOpen(false);

@@ -1,6 +1,7 @@
 import React from "react";
 import { useLoaderData } from "react-router-dom";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { deleteInstallment, getPublishedInstallments, Pagination, PublishedInstallment } from "$app/data/installments";
 import { assertDefined } from "$app/utils/assert";
@@ -27,6 +28,7 @@ import { useUserAgentInfo } from "$app/components/UserAgent";
 import publishedPlaceholder from "$assets/images/placeholders/published_posts.png";
 
 export const PublishedTab = () => {
+  const { t } = useTranslation('common');
   const data = cast<{ installments: PublishedInstallment[]; pagination: Pagination } | undefined>(useLoaderData());
   const [installments, setInstallments] = React.useState(data?.installments ?? []);
   const [pagination, setPagination] = React.useState(data?.pagination ?? { count: 0, next: null });
@@ -64,7 +66,7 @@ export const PublishedTab = () => {
       activeFetchRequest.current = null;
       setIsLoading(false);
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
   };
   const debouncedFetchInstallments = useDebouncedCallback(
@@ -83,10 +85,10 @@ export const PublishedTab = () => {
       await deleteInstallment(deletingInstallment.id);
       setInstallments(installments.filter((installment) => installment.external_id !== deletingInstallment.id));
       setDeletingInstallment(null);
-      showAlert("Email deleted!", "success");
+      showAlert(t("actions.email_deleted"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
   };
 

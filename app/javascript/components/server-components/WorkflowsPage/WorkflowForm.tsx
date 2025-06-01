@@ -2,6 +2,7 @@ import cx from "classnames";
 import * as React from "react";
 import { Link, useLoaderData, useNavigate, useRevalidator } from "react-router-dom";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   WorkflowFormContext,
@@ -86,6 +87,7 @@ type WorkflowFormState = {
   fromCountry: string;
 };
 const WorkflowForm = () => {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const { context, workflow } = cast<{ context: WorkflowFormContext; workflow?: Workflow }>(useLoaderData());
   const loaderDataRevalidator = useRevalidator();
@@ -258,10 +260,10 @@ const WorkflowForm = () => {
       const response = await (workflow ? updateWorkflow(workflow.external_id, payload) : createWorkflow(payload));
       if (response.success) {
         if (saveActionName === "save") {
-          showAlert("Changes saved!", "success");
+          showAlert(t("actions.changes_saved"), "success");
           navigate(`/workflows/${response.workflow_id}/emails`);
         } else {
-          showAlert(saveActionName === "save_and_publish" ? "Workflow published!" : "Unpublished!", "success");
+          showAlert(saveActionName === "save_and_publish" ? t("actions.workflow_published") : t("actions.unpublished"), "success");
           loaderDataRevalidator.revalidate();
         }
       } else {
@@ -269,7 +271,7 @@ const WorkflowForm = () => {
       }
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     } finally {
       setIsSaving(false);
     }

@@ -6,6 +6,7 @@ import cx from "classnames";
 import * as React from "react";
 import { createPortal } from "react-dom";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "$app/components/Button";
 import { Modal } from "$app/components/Modal";
@@ -22,6 +23,7 @@ export const WithDialog = ({
   type: "link" | "button";
   children: React.ReactNode;
 }) => {
+  const { t } = useTranslation('common');
   const [addingLink, setAddingLink] = React.useState<{ label: string; url: string } | null>(null);
   const labelInputRef = React.useRef<HTMLInputElement | null>(null);
   const linkInputRef = React.useRef<HTMLInputElement | null>(null);
@@ -53,7 +55,7 @@ export const WithDialog = ({
 
     const href = validateUrl(addingLink.url);
     if (!href) {
-      showAlert("Please enter a valid URL.", "error");
+      showAlert(t("errors.please_enter_valid_url"), "error");
       return;
     }
     const chain = editor.chain().focus();
@@ -127,6 +129,7 @@ export const WithDialog = ({
 };
 
 const LinkNodeView = ({ node, editor, getPos, deleteNode }: NodeViewProps) => {
+  const { t } = useTranslation('common');
   const [isPopoverShown, setIsPopoverShown] = React.useState(false);
   const [isPopoverVisible, setIsPopoverVisible] = React.useState(false);
   const [link, setLink] = React.useState<{ label: string; url: string }>({
@@ -142,7 +145,7 @@ const LinkNodeView = ({ node, editor, getPos, deleteNode }: NodeViewProps) => {
     if (link.label.trim() === "") return;
     if (!href) {
       linkInputRef.current?.focus();
-      return showAlert("Please enter a valid URL.", "error");
+      return showAlert(t("errors.please_enter_valid_url"), "error");
     }
     const markStartPos = getPos() + 1;
     editor

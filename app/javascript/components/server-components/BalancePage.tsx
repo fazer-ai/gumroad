@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cast, createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { exportPayouts } from "$app/data/balance";
 import { createInstantPayout } from "$app/data/payout";
@@ -252,6 +253,7 @@ export type PastPayoutsDataAndPaymentMethod = PastPeriodPayoutsData &
 
 type PayoutPeriodData = CurrentPayoutsDataAndPaymentMethodWithUserPayable | PastPayoutsDataAndPaymentMethod;
 const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) => {
+  const { t } = useTranslation('common');
   const { should_be_shown_currencies_always: showUSDSuffix } = payoutPeriodData;
   const [isCSVDownloadInProgress, setIsCSVDownloadInProgress] = React.useState(false);
 
@@ -265,7 +267,7 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
 
   const handleRequestPayoutCSV = asyncVoid(async () => {
     if (!("payment_external_id" in payoutPeriodData)) {
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
       return;
     }
 
@@ -273,10 +275,10 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
 
     try {
       await exportPayouts([payoutPeriodData.payment_external_id]);
-      showAlert("You will receive an email in your inbox shortly with the data you've requested.", "success");
+      showAlert(t("actions.email_with_data_requested"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
     setIsCSVDownloadInProgress(false);
   });

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { updateReviewResponse, deleteReviewResponse } from "$app/data/customers";
 import { assertResponseError } from "$app/utils/request";
@@ -21,6 +22,7 @@ export const ReviewResponseForm = ({
   onEditingChange?: (isEditing: boolean) => void;
   buttonProps?: React.ComponentProps<typeof Button>;
 }) => {
+  const { t } = useTranslation('common');
   const loggedInUser = useLoggedInUser();
 
   const [isLoading, setIsLoading] = React.useState(false);
@@ -34,7 +36,7 @@ export const ReviewResponseForm = ({
     setIsLoading(true);
     try {
       await updateReviewResponse(purchaseId, message);
-      showAlert(originalMessage ? "Response updated successfully!" : "Response submitted successfully!", "success");
+      showAlert(originalMessage ? t("actions.response_updated_successfully") : t("actions.response_submitted_successfully"), "success");
       onChange({ message });
       setIsEditing(false);
     } catch (e) {
@@ -48,7 +50,7 @@ export const ReviewResponseForm = ({
     setIsLoading(true);
     try {
       await deleteReviewResponse(purchaseId);
-      showAlert("Response deleted successfully!", "success");
+      showAlert(t("actions.response_deleted_successfully"), "success");
       onChange(null);
       setDeleteConfirmation(false);
     } catch (e) {

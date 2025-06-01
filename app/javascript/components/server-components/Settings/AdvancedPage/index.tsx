@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cast, createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { SettingPage } from "$app/parsers/settings";
 import { asyncVoid } from "$app/utils/promise";
@@ -33,6 +34,7 @@ type Props = {
 };
 
 const AdvancedPage = (props: Props) => {
+  const { t } = useTranslation('common');
   const [customDomain, setCustomDomain] = React.useState(props.custom_domain_name);
   const [pingEndpoint, setPingEndpoint] = React.useState(props.notification_endpoint);
   const [blockedEmails, setBlockedEmails] = React.useState(props.blocked_customer_emails);
@@ -53,7 +55,7 @@ const AdvancedPage = (props: Props) => {
       });
       const responseData = cast<{ success: true } | { success: false; error_message: string }>(await response.json());
       if (!responseData.success) throw new ResponseError(responseData.error_message);
-      showAlert("Your account has been updated!", "success");
+      showAlert(t("actions.account_updated"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");

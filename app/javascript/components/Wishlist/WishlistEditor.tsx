@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { deleteWishlistItem, updateWishlist } from "$app/data/wishlists";
 import { formatPriceCentsWithCurrencySymbol } from "$app/utils/currency";
@@ -20,6 +21,7 @@ const WishlistItemCard = ({
   item: WishlistItem;
   onDelete: () => void;
 }) => {
+  const { t } = useTranslation('common');
   const [isDeleting, setIsDeleting] = React.useState(false);
 
   const price = (product.price_cents + (option?.price_difference_cents || 0)) * quantity;
@@ -29,11 +31,11 @@ const WishlistItemCard = ({
 
     try {
       await deleteWishlistItem({ wishlistId, wishlistProductId: id });
-      showAlert("Removed from wishlist", "success");
+      showAlert(t("actions.removed_from_wishlist"), "success");
       onDelete();
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     } finally {
       setIsDeleting(false);
     }
@@ -132,6 +134,7 @@ export const WishlistEditor = ({
   isDiscoverable: boolean;
   onClose: () => void;
 }) => {
+  const { t } = useTranslation('common');
   const [newName, setNewName] = React.useState(name);
   const [newDescription, setNewDescription] = React.useState(description ?? "");
   const uid = React.useId();
@@ -144,7 +147,7 @@ export const WishlistEditor = ({
       await updateWishlist({ id, name: newName, description: descriptionValue });
       setName(newName);
       setDescription(descriptionValue);
-      showAlert("Changes saved!", "success");
+      showAlert(t("actions.changes_saved"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");

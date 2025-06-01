@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   saveThirdPartyAnalytics,
@@ -27,6 +28,7 @@ type Props = {
 };
 
 const ThirdPartyAnalyticsPage = ({ settings_pages, third_party_analytics, products }: Props) => {
+  const { t } = useTranslation('common');
   const loggedInUser = useLoggedInUser();
   const [thirdPartyAnalytics, setThirdPartyAnalytics] = React.useState(third_party_analytics);
   const updateThirdPartyAnalytics = (update: Partial<ThirdPartyAnalytics>) =>
@@ -62,7 +64,7 @@ const ThirdPartyAnalyticsPage = ({ settings_pages, third_party_analytics, produc
             id: snippet.id && !snippet.id.startsWith(NEW_SNIPPET_ID_PREFIX) ? snippet.id : null,
           })),
         });
-        if (result.success) showAlert("Changes saved!", "success");
+        if (result.success) showAlert(t("actions.changes_saved"), "success");
         else showAlert(result.error_message, "error");
       })}
       canUpdate={loggedInUser?.policies.settings_third_party_analytics_user.update || false}

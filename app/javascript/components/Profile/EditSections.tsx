@@ -6,6 +6,7 @@ import sortBy from "lodash/sortBy";
 import * as React from "react";
 import { ReactSortable as Sortable } from "react-sortablejs";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   FeaturedProductSection,
@@ -65,6 +66,7 @@ export const ReducerContext = React.createContext<readonly [PageProps, React.Dis
 export const useReducer = () => assertDefined(React.useContext(ReducerContext));
 
 const useSaveSection = (initialSection: Section) => {
+  const { t } = useTranslation('common');
   const [savedSection, setSavedSection] = React.useState(initialSection);
   return async (section: Section) => {
     if (isEqual(savedSection, section)) return;
@@ -76,7 +78,7 @@ const useSaveSection = (initialSection: Section) => {
         accept: "json",
       });
       if (!response.ok) throw new ResponseError(cast<{ error: string }>(await response.json()).error);
-      showAlert("Changes saved!", "success");
+      showAlert(t("actions.changes_saved"), "success");
       setSavedSection(section);
     } catch (e) {
       assertResponseError(e);
@@ -199,6 +201,7 @@ export const SectionLayout = ({
   children: React.ReactNode;
   menuItems?: React.ReactElement[];
 }) => {
+  const { t } = useTranslation('common');
   const [state, dispatch] = useReducer();
   const [linkCopied, setLinkCopied] = React.useState(false);
   const updateSection = (updated: Partial<BaseSection>) =>

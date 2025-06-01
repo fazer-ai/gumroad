@@ -6,6 +6,7 @@ import cx from "classnames";
 import * as React from "react";
 import { Link, useLoaderData, useRevalidator } from "react-router-dom";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   WorkflowFormContext,
@@ -92,6 +93,7 @@ const AbandonedCartProductsProvider = AbandonedCartProductsContext.Provider;
 const useAbandonedCartProducts = () => assertDefined(React.useContext(AbandonedCartProductsContext));
 
 const WorkflowEmails = () => {
+  const { t } = useTranslation('common');
   const { context, workflow } = cast<{ context: WorkflowFormContext; workflow: Workflow }>(useLoaderData());
   const loaderDataRevalidator = useRevalidator();
   const [sendToPastCustomers, setSendToPastCustomers] = React.useState(workflow.send_to_past_customers);
@@ -247,14 +249,14 @@ const WorkflowEmails = () => {
         const response = await saveWorkflowInstallments(workflow.external_id, payload);
         if (response.success) {
           if (sendPreviewForEmailId) {
-            showAlert("A preview has been sent to your email.", "success");
+            showAlert(t("actions.preview_sent_to_email"), "success");
           } else {
             showAlert(
               saveActionName === "save_and_publish"
-                ? "Workflow published!"
+                ? t("actions.workflow_published")
                 : saveActionName === "save_and_unpublish"
-                  ? "Unpublished!"
-                  : "Changes saved!",
+                  ? t("actions.unpublished")
+                  : t("actions.changes_saved"),
               "success",
             );
           }
@@ -276,7 +278,7 @@ const WorkflowEmails = () => {
         }
       } catch (e) {
         assertResponseError(e);
-        showAlert("Sorry, something went wrong. Please try again.", "error");
+        showAlert(t("errors.sorry_something_went_wrong"), "error");
       } finally {
         setIsSaving(false);
       }

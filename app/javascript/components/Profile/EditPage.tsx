@@ -3,6 +3,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import isEqual from "lodash/isEqual";
 import * as React from "react";
 import { ReactSortable as Sortable } from "react-sortablejs";
+import { useTranslation } from "react-i18next";
 
 import { updateProfileSettings } from "$app/data/profile_settings";
 import GuidGenerator from "$app/utils/guid_generator";
@@ -104,6 +105,7 @@ const TabList = React.forwardRef<HTMLDivElement, React.HTMLProps<HTMLDivElement>
 TabList.displayName = "TabList";
 
 export const EditProfile = (props: Props) => {
+  const { t } = useTranslation('common');
   const appDomain = useAppDomain();
 
   const [sections, setSections] = React.useState(props.sections);
@@ -125,7 +127,7 @@ export const EditProfile = (props: Props) => {
     if (isEqual(tabs, savedTabs.current)) return;
     try {
       await updateProfileSettings({ tabs });
-      showAlert("Changes saved!", "success");
+      showAlert(t("actions.changes_saved"), "success");
       savedTabs.current = tabs;
     } catch (e) {
       assertResponseError(e);
@@ -234,7 +236,7 @@ export const EditProfile = (props: Props) => {
               aria-selected={tab === selectedTab}
               onClick={() => {
                 if (imageUploadSettings.isUploading) {
-                  showAlert("Please wait for all images to finish uploading before switching tabs.", "warning");
+                  showAlert(t("errors.wait_for_images_upload_before_switching"), "warning");
                   return;
                 }
                 setSelectedTab(tab);

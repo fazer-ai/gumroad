@@ -4,6 +4,7 @@ import { lightFormat, subMonths } from "date-fns";
 import { format } from "date-fns-tz";
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   Address,
@@ -120,6 +121,7 @@ const CustomersPage = ({
   can_ping: boolean;
   show_refund_fee_notice: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const currentSeller = useCurrentSeller();
   const userAgentInfo = useUserAgentInfo();
 
@@ -812,7 +814,7 @@ const CustomerDrawer = ({
             : (email) =>
                 updatePurchase(customer.id, { email }).then(
                   () => {
-                    showAlert("Email updated successfully.", "success");
+                    showAlert(t("actions.email_updated_successfully"), "success");
                     onChange({ email });
                     if (productPurchases.length)
                       setProductPurchases((prevProductPurchases) =>
@@ -851,7 +853,7 @@ const CustomerDrawer = ({
           onSave={(email) =>
             updatePurchase(customer.id, { giftee_email: email }).then(
               () => {
-                showAlert("Email updated successfully.", "success");
+                showAlert(t("actions.email_updated_successfully"), "success");
                 onChange({ giftee_email: email });
               },
               (e: unknown) => {
@@ -1032,7 +1034,7 @@ const CustomerDrawer = ({
           onSave={(enabled) =>
             updateLicense(license.id, enabled).then(
               () => {
-                showAlert("Changes saved!", "success");
+                showAlert(t("actions.changes_saved"), "success");
                 onChange({ license: { ...license, enabled } });
               },
               (e: unknown) => {
@@ -1049,7 +1051,7 @@ const CustomerDrawer = ({
           onSave={(quantity) =>
             updatePurchase(customer.id, { quantity }).then(
               () => {
-                showAlert("Successfully updated seats!", "success");
+                showAlert(t("actions.successfully_updated_seats"), "success");
                 onChange({ quantity });
               },
               (e: unknown) => {
@@ -1067,7 +1069,7 @@ const CustomerDrawer = ({
             onMarkShipped={(url) =>
               markShipped(customer.id, url).then(
                 () => {
-                  showAlert("Changes saved!", "success");
+                  showAlert(t("actions.changes_saved"), "success");
                   onChange({ shipping: { ...shipping, tracking: { url, shipped: true } } });
                 },
                 (e: unknown) => {
@@ -1083,7 +1085,7 @@ const CustomerDrawer = ({
             onSave={(address) =>
               updatePurchase(customer.id, address).then(
                 () => {
-                  showAlert("Changes saved!", "success");
+                  showAlert(t("actions.changes_saved"), "success");
                   onChange({ shipping: { ...shipping, address } });
                 },
                 (e: unknown) => {
@@ -1128,7 +1130,7 @@ const CustomerDrawer = ({
           onCancel={() =>
             void cancelSubscription(subscription.id).then(
               () => {
-                showAlert("Changes saved!", "success");
+                showAlert(t("actions.changes_saved"), "success");
                 onChange({ subscription: { ...subscription, status: "pending_cancellation" } });
               },
               (e: unknown) => {
@@ -1604,10 +1606,10 @@ const ReviewVideosSubsections = ({ review, onChange }: { review: Review; onChang
     try {
       await approveReviewVideo(video.id);
       onChange({ ...review, videos: [{ ...video, approval_status: "approved" }] });
-      showAlert("This video is now live!", "success");
+      showAlert(t("actions.video_now_live"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Something went wrong", "error");
+      showAlert(t("errors.something_went_wrong"), "error");
     } finally {
       setLoading(false);
     }
@@ -1619,11 +1621,11 @@ const ReviewVideosSubsections = ({ review, onChange }: { review: Review; onChang
       await rejectReviewVideo(video.id);
       const otherVideos = review.videos.filter((v) => v.id !== video.id);
       onChange({ ...review, videos: [{ ...video, approval_status: "rejected" }, ...otherVideos] });
-      showAlert("This video has been removed.", "success");
+      showAlert(t("actions.video_removed"), "success");
       setApprovedVideoRemovalModalOpen(false);
     } catch (e) {
       assertResponseError(e);
-      showAlert("Something went wrong", "error");
+      showAlert(t("errors.something_went_wrong"), "error");
     } finally {
       setLoading(false);
     }
@@ -1769,7 +1771,7 @@ const OptionSection = ({
     try {
       setIsLoading(true);
       await updateOption(purchaseId, option.id, quantity);
-      showAlert("Saved variant", "success");
+      showAlert(t("actions.saved_variant"), "success");
       onChange(option);
       setIsEditing(false);
     } catch (e) {
@@ -2020,7 +2022,7 @@ const PingButton = ({ purchaseId }: { purchaseId: string }) => {
     setIsLoading(true);
     try {
       await resendPing(purchaseId);
-      showAlert("Ping resent.", "success");
+      showAlert(t("actions.ping_resent"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");
@@ -2052,11 +2054,11 @@ const AccessSection = ({
     try {
       if (revoke) {
         await revokeAccess(purchaseId);
-        showAlert("Access revoked", "success");
+        showAlert(t("actions.access_revoked"), "success");
         onChange(true);
       } else {
         await undoRevokeAccess(purchaseId);
-        showAlert("Access re-enabled", "success");
+        showAlert(t("actions.access_re_enabled"), "success");
         onChange(false);
       }
     } catch (e) {
@@ -2124,7 +2126,7 @@ const RefundForm = ({
       const refundAmountRemaining = amountRefundable - refundAmountCents.value;
       onChange(refundAmountRemaining);
       setRefundAmountCents({ value: refundAmountRemaining });
-      showAlert("Purchase successfully refunded.", "success");
+      showAlert(t("actions.purchase_successfully_refunded"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");
@@ -2347,7 +2349,7 @@ const CallSection = ({ call, onChange }: { call: Call; onChange: (call: Call) =>
     try {
       await updateCallUrl(call.id, callUrl);
       onChange({ ...call, call_url: callUrl });
-      showAlert("Call URL updated!", "success");
+      showAlert(t("actions.call_url_updated"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");
@@ -2471,9 +2473,9 @@ const CommissionSection = ({
         ],
       });
 
-      showAlert("Uploaded successfully!", "success");
+      showAlert(t("actions.uploaded_successfully"), "success");
     } catch {
-      showAlert("Error uploading files. Please try again.", "error");
+      showAlert(t("errors.error_uploading_files"), "error");
     } finally {
       setIsLoading(false);
     }
@@ -2490,7 +2492,7 @@ const CommissionSection = ({
         ...commission,
         files: commission.files.filter(({ id }) => id !== fileId),
       });
-      showAlert("File deleted successfully!", "success");
+      showAlert(t("actions.file_deleted_successfully"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");
@@ -2504,7 +2506,7 @@ const CommissionSection = ({
       setIsLoading(true);
       await completeCommission(commission.id);
       onChange({ ...commission, status: "completed" });
-      showAlert("Commission completed!", "success");
+      showAlert(t("actions.commission_completed"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");

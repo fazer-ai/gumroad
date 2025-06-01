@@ -2,6 +2,7 @@ import cx from "classnames";
 import React from "react";
 import { RouterProvider, createBrowserRouter, RouteObject, Link, json, useLocation } from "react-router-dom";
 import { StaticRouterProvider } from "react-router-dom/server";
+import { useTranslation } from "react-i18next";
 
 import {
   getDraftInstallments,
@@ -123,6 +124,7 @@ export const EditEmailButton = ({ id }: { id: string }) => {
 };
 
 export const ViewEmailButton = (props: { installment: SavedInstallment }) => {
+  const { t } = useTranslation('common');
   const [sendingPreviewEmail, setSendingPreviewEmail] = React.useState(false);
 
   return (
@@ -132,7 +134,7 @@ export const ViewEmailButton = (props: { installment: SavedInstallment }) => {
         setSendingPreviewEmail(true);
         try {
           await previewInstallment(props.installment.external_id);
-          showAlert("A preview has been sent to your email.", "success");
+          showAlert(t("actions.preview_sent_to_email"), "success");
         } catch (error) {
           assertResponseError(error);
           showAlert(error.message, "error");

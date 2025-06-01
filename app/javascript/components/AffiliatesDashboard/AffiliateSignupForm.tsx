@@ -2,6 +2,7 @@ import cx from "classnames";
 import * as React from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   submitAffiliateSignupForm,
@@ -41,6 +42,7 @@ const validateProduct = (product: SelfServeAffiliateProduct): InvalidProductAttr
 };
 
 export const AffiliateSignupForm = () => {
+  const { t } = useTranslation('common');
   const data = cast<AffiliateSignupFormPageData>(useLoaderData());
   const loggedInUser = useLoggedInUser();
   const [isSaving, setIsSaving] = React.useState(false);
@@ -57,17 +59,17 @@ export const AffiliateSignupForm = () => {
 
   const handleSaveChanges = asyncVoid(async () => {
     if (products.some((product) => validateProduct(product).size > 0)) {
-      showAlert("There are some errors on the page. Please fix them and try again.", "error");
+      showAlert(t("errors.fix_errors_and_try_again"), "error");
       return;
     }
 
     try {
       setIsSaving(true);
       await submitAffiliateSignupForm({ products, disable_global_affiliate: disableGlobalAffiliate });
-      showAlert("Changes saved!", "success");
+      showAlert(t("actions.changes_saved"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert(`An error occurred while saving changes${e.message ? ` - ${e.message}` : ""}`, "error");
+      showAlert(t("errors.error_saving_changes", { message: e.message || "" }), "error");
     } finally {
       setIsSaving(false);
     }

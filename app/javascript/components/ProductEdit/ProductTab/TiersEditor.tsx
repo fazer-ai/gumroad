@@ -2,6 +2,7 @@ import { Editor } from "@tiptap/core";
 import cx from "classnames";
 import { format } from "date-fns";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { sendSamplePriceChangeEmail } from "$app/data/membership_tiers";
 import { getIsSingleUnitCurrency } from "$app/utils/currency";
@@ -350,6 +351,7 @@ const TierEditor = ({
 
 const getDateWithUTCOffset = (date: Date): Date => new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 const PriceChangeSettings = ({ tier, updateTier }: { tier: Tier; updateTier: (update: Partial<Tier>) => void }) => {
+  const { t } = useTranslation('common');
   const uid = React.useId();
 
   const [isMounted, setIsMounted] = React.useState(false);
@@ -447,11 +449,11 @@ You can modify or cancel your membership at any time.`;
                   effectiveDate: formattedEffectiveDate,
                 }).then(
                   () => {
-                    showAlert("Email sample sent! Check your email", "success");
+                    showAlert(t("actions.email_sample_sent"), "success");
                   },
                   (e: unknown) => {
                     assertResponseError(e);
-                    showAlert("Error sending email", "error");
+                    showAlert(t("errors.error_sending_email"), "error");
                   },
                 )
               }

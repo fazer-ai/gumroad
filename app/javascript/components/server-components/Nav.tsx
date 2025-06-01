@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { assertResponseError, request, ResponseError } from "$app/utils/request";
 import { register } from "$app/utils/serverComponentUtil";
@@ -19,6 +20,7 @@ type Props = {
 };
 
 const NavLinkDropdownMembershipItem = ({ teamMembership }: { teamMembership: TeamMembership }) => {
+  const { t } = useTranslation('common');
   const onClick = (ev: React.MouseEvent<HTMLAnchorElement>) => {
     const currentUrl = new URL(window.location.href);
     // It is difficult to tell if the account to be switched has access to the current page via policies in this context.
@@ -38,7 +40,7 @@ const NavLinkDropdownMembershipItem = ({ teamMembership }: { teamMembership: Tea
       })
       .catch((e: unknown) => {
         assertResponseError(e);
-        showAlert("Something went wrong.", "error");
+        showAlert(t("errors.something_went_wrong"), "error");
       });
   };
 

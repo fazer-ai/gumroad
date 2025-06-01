@@ -1,6 +1,7 @@
 import cx from "classnames";
 import React, { useEffect, useRef, useState } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "$app/components/Icons";
 import { LoadingSpinner } from "$app/components/LoadingSpinner";
@@ -130,6 +131,7 @@ export default function ReviewVideoRecorderClientOnly({
 }: ReviewVideoRecorderProps & {
   reacquireStream: () => void;
 }) {
+  const { t } = useTranslation('common');
   const [uiState, setUiState] = useState<ReviewVideoRecorderUiState>("idle");
   const [askPermission, setAskPermission] = useState(false);
 
@@ -221,7 +223,7 @@ export default function ReviewVideoRecorderClientOnly({
     if (uiState === "recording") {
       const timer = setTimeout(() => {
         stopRecording();
-        showAlert("Your recording has reached its maximum length and has been stopped.", "info");
+        showAlert(t("actions.recording_max_length_reached"), "info");
       }, MAX_RECORDING_DURATION_MS);
       return () => clearTimeout(timer);
     }

@@ -2,6 +2,7 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import { Link, useLoaderData, useNavigation } from "react-router-dom";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   acceptCollaboratorInvitation,
@@ -275,6 +276,7 @@ const pendingCollaboratorsFirst = (a: IncomingCollaborator, b: IncomingCollabora
 };
 
 export const IncomingCollaborators = () => {
+  const { t } = useTranslation('common');
   const loggedInUser = useLoggedInUser();
   const navigation = useNavigation();
 
@@ -323,10 +325,10 @@ export const IncomingCollaborators = () => {
       // accepting as they'll be in the same position.
       setSelected(null);
 
-      showAlert("Invitation accepted", "success");
+      showAlert(t("actions.invitation_accepted"), "success");
     } catch (error) {
       assertResponseError(error);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     } finally {
       finishProcessing(incomingCollaborator);
     }
@@ -337,10 +339,10 @@ export const IncomingCollaborators = () => {
       startProcessing(incomingCollaborator);
       await declineCollaboratorInvitation(incomingCollaborator.id);
       removeIncomingCollaboratorFromList(incomingCollaborator);
-      showAlert("Invitation declined", "success");
+      showAlert(t("actions.invitation_declined"), "success");
     } catch (error) {
       assertResponseError(error);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     } finally {
       finishProcessing(incomingCollaborator);
     }
@@ -351,10 +353,10 @@ export const IncomingCollaborators = () => {
       startProcessing(incomingCollaborator);
       await removeCollaborator(incomingCollaborator.id);
       removeIncomingCollaboratorFromList(incomingCollaborator);
-      showAlert("Collaborator removed", "success");
+      showAlert(t("actions.collaborator_removed"), "success");
     } catch (error) {
       assertResponseError(error);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     } finally {
       finishProcessing(incomingCollaborator);
     }

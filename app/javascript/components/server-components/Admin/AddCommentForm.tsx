@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { register } from "$app/utils/serverComponentUtil";
 
@@ -12,12 +13,14 @@ export const AdminAddCommentForm = ({
 }: {
   commentable_id: number;
   commentable_type: string;
-}) => (
+}) => {
+  const { t } = useTranslation('common');
+  return (
   <Form
     url={Routes.admin_comments_path()}
     method="POST"
     confirmMessage="Are you sure you want to post this comment?"
-    onSuccess={() => showAlert("Successfully added comment.", "success")}
+    onSuccess={() => showAlert(t("actions.successfully_added_comment"), "success")}
   >
     {(isLoading) => (
       <fieldset>
@@ -33,6 +36,7 @@ export const AdminAddCommentForm = ({
       </fieldset>
     )}
   </Form>
-);
+  );
+};
 
 export default register({ component: AdminAddCommentForm, propParser: createCast() });

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { asyncVoid } from "$app/utils/promise";
 import { request } from "$app/utils/request";
@@ -27,6 +28,7 @@ const PayPalConnectSection = ({
   isFormDisabled: boolean;
   connectAccountFeeInfoText: string;
 }) => {
+  const { t } = useTranslation('common');
   const disconnectPayPal = asyncVoid(async () => {
     const response = await request({
       method: "POST",
@@ -36,10 +38,10 @@ const PayPalConnectSection = ({
 
     const parsedResponse = cast<{ success: boolean }>(await response.json());
     if (parsedResponse.success) {
-      showAlert("Your PayPal account has been disconnected.", "success");
+      showAlert(t("actions.paypal_account_disconnected"), "success");
       window.location.reload();
     } else {
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
   });
 

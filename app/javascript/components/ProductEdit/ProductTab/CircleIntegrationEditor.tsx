@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { CircleCommunity, CircleSpaceGroup, fetchCommunities, fetchSpaceGroups } from "$app/data/circle_integration";
 import { assertResponseError } from "$app/utils/request";
@@ -27,6 +28,7 @@ export const CircleIntegrationEditor = ({
   integration: CircleIntegration;
   onChange: (integration: CircleIntegration) => void;
 }) => {
+  const { t } = useTranslation('common');
   const uid = React.useId();
 
   const { product, updateProduct } = useProductEditContext();
@@ -48,7 +50,7 @@ export const CircleIntegrationEditor = ({
       } catch (e) {
         assertResponseError(e);
         setCommunities({ status: "error" });
-        showAlert("Could not retrieve communities from Circle. Please check your API key.", "error");
+        showAlert(t("errors.circle_communities_retrieval_failed"), "error");
       }
     }
   };
@@ -65,7 +67,7 @@ export const CircleIntegrationEditor = ({
     } catch (e) {
       assertResponseError(e);
       setSpaceGroups({ status: "error" });
-      showAlert("Could not retrieve space groups from Circle. Please try again.", "error");
+      showAlert(t("errors.circle_space_groups_retrieval_failed"), "error");
     }
   };
 

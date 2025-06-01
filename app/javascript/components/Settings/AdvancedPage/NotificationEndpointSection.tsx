@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { asyncVoid } from "$app/utils/promise";
 import { assertResponseError, request, ResponseError } from "$app/utils/request";
@@ -17,12 +18,13 @@ const NotificationEndpointSection = ({
   setPingEndpoint: (val: string) => void;
   userId: string;
 }) => {
+  const { t } = useTranslation('common');
   const [isSendingPing, setIsSendingPing] = React.useState(false);
   const uid = React.useId();
 
   const sendTestPing = asyncVoid(async () => {
     if (pingEndpoint.trim().length === 0) {
-      showAlert("Please provide a URL to send a test ping to.", "error");
+      showAlert(t("errors.please_provide_url_test_ping"), "error");
       return;
     }
 

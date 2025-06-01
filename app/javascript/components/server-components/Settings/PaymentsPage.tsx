@@ -3,6 +3,7 @@ import cx from "classnames";
 import { CountryCode, parsePhoneNumber } from "libphonenumber-js";
 import * as React from "react";
 import { cast, createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { CardPayoutError, prepareCardTokenForPayouts } from "$app/data/card_payout_data";
 import { SavedCreditCard } from "$app/parsers/card";
@@ -207,6 +208,7 @@ export type ErrorMessageInfo = {
 };
 
 const PaymentsPage = (props: Props) => {
+  const { t } = useTranslation('common');
   const userAgentInfo = useUserAgentInfo();
   const [isSaving, setIsSaving] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<ErrorMessageInfo | null>(null);
@@ -755,14 +757,14 @@ const PaymentsPage = (props: Props) => {
         { success: true } | { success: false; error_message: string; error_code?: string | null }
       >(await response.json());
       if (parsedResponse.success) {
-        showAlert("Thanks! You're all set.", "success");
+        showAlert(t("actions.thanks_all_set"), "success");
         window.location.reload();
       } else {
         setErrorMessage({ message: parsedResponse.error_message, code: parsedResponse.error_code ?? null });
       }
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
 
     setIsSaving(false);

@@ -1,6 +1,7 @@
 import { produce } from "immer";
 import * as React from "react";
 import { createCast, is } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { deletePurchasedProduct, setPurchaseArchived } from "$app/data/library";
 import { ProductNativeType } from "$app/parsers/product";
@@ -59,6 +60,7 @@ export const Card = ({
   onArchive: () => void;
   onDelete: (confirm?: boolean) => void;
 }) => {
+  const { t } = useTranslation('common');
   const { product, purchase } = result;
 
   const toggleArchived = asyncVoid(async () => {
@@ -66,10 +68,10 @@ export const Card = ({
     try {
       await setPurchaseArchived(data);
       onArchive();
-      showAlert(result.purchase.is_archived ? "Product unarchived!" : "Product archived!", "success");
+      showAlert(result.purchase.is_archived ? t("actions.product_unarchived") : t("actions.product_archived"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Something went wrong.", "error");
+      showAlert(t("errors.something_went_wrong"), "error");
     }
   });
 
@@ -125,14 +127,15 @@ export const DeleteProductModal = ({
   onCancel: () => void;
   onDelete: (deleted: Result) => void;
 }) => {
+  const { t } = useTranslation('common');
   const deletePurchase = asyncVoid(async (result: Result) => {
     try {
       await deletePurchasedProduct({ purchase_id: result.purchase.id });
       onDelete(result);
-      showAlert("Product deleted!", "success");
+      showAlert(t("actions.product_deleted"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Something went wrong.", "error");
+      showAlert(t("errors.something_went_wrong"), "error");
     }
   });
 
@@ -230,6 +233,7 @@ const extractParams = (rawParams: URLSearchParams): Params => ({
 });
 
 const LibraryPage = ({ results, creators, bundles, reviews_page_enabled, following_wishlists_enabled }: Props) => {
+  const { t } = useTranslation('common');
   const originalLocation = useOriginalLocation();
   const discoverUrl = useDiscoverUrl();
   const [state, dispatch] = React.useReducer(reducer, null, () => ({
@@ -276,10 +280,10 @@ const LibraryPage = ({ results, creators, bundles, reviews_page_enabled, followi
     try {
       await deletePurchasedProduct({ purchase_id: result.purchase.id });
       dispatch({ type: "delete-purchase", id: result.purchase.id });
-      showAlert("Product deleted!", "success");
+      showAlert(t("actions.product_deleted"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Something went wrong.", "error");
+      showAlert(t("errors.something_went_wrong"), "error");
     }
   });
 

@@ -1,6 +1,7 @@
 import { DirectUpload } from "@rails/activestorage";
 import * as React from "react";
 import { cast, createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   CancellationRebuttalOption,
@@ -60,6 +61,7 @@ type Blob = {
 };
 
 const DisputeEvidencePage = ({ dispute_evidence, disputable, products }: Props) => {
+  const { t } = useTranslation('common');
   const reasonForWinningUID = React.useId();
   const cancellationRebuttalUID = React.useId();
   const refundRefusalExplanationUID = React.useId();
@@ -117,9 +119,9 @@ const DisputeEvidencePage = ({ dispute_evidence, disputable, products }: Props) 
     if (!file) return;
 
     if (!FileUtils.isFileNameExtensionAllowed(file.name, ALLOWED_EXTENSIONS))
-      return showAlert("Invalid file type.", "error");
+      return showAlert(t("errors.invalid_file_type"), "error");
     if (file.size > dispute_evidence.customer_communication_file_max_size)
-      return showAlert("The file exceeds the maximum size allowed.", "error");
+      return showAlert(t("errors.file_exceeds_maximum_size"), "error");
 
     setIsUploading(true);
     const upload = new DirectUpload(file, Routes.rails_direct_uploads_path());

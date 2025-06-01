@@ -2,6 +2,7 @@ import cx from "classnames";
 import throttle from "lodash/throttle";
 import * as React from "react";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { createConsumptionEvent } from "$app/data/consumption_analytics";
 import { trackMediaLocationChanged } from "$app/data/media_location";
@@ -74,6 +75,7 @@ export type FolderItem = {
 
 type Props = { content_items: (FileItem | FolderItem)[] };
 export const FileList = ({ content_items }: Props) => {
+  const { t } = useTranslation('common');
   const [playingAudioForId, setPlayingAudioForId] = React.useState<null | string>(null);
 
   useRunOnce(() => {
@@ -83,7 +85,7 @@ export const FileList = ({ content_items }: Props) => {
         .some(({ processing }) => processing)
     )
       showAlert(
-        "This product includes a file that's being processed. You'll be able to download it shortly.",
+        t("warnings.file_being_processed"),
         "warning",
       );
   });
@@ -304,7 +306,7 @@ export const FileRow = ({
                     playAudio();
                   } catch (e) {
                     assertResponseError(e);
-                    showAlert("Sorry, something went wrong. Please try again.", "error");
+                    showAlert(t("errors.sorry_something_went_wrong"), "error");
                   }
                 } else {
                   playAudio();
@@ -656,7 +658,7 @@ const VideoEmbedPreview = ({
         setIsVideoPlayerShowing(true);
       } catch (e) {
         assertResponseError(e);
-        showAlert("Sorry, something went wrong. Please try again.", "error");
+        showAlert(t("errors.sorry_something_went_wrong"), "error");
       }
     } else {
       setIsVideoPlayerShowing(true);
@@ -730,7 +732,7 @@ const SendToKindleContainer = ({
       const json = cast<{ success: boolean }>(await response.json());
       if (!json.success) throw new ResponseError("Please enter a valid Kindle email address.");
 
-      showAlert("It's been sent to your Kindle.", "success");
+      showAlert(t("actions.sent_to_kindle"), "success");
       onDone();
     } catch (e) {
       assertResponseError(e);

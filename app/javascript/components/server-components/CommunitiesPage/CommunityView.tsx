@@ -4,6 +4,7 @@ import debounce from "lodash/debounce";
 import * as React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { is } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import cable from "$app/channels/consumer";
 import {
@@ -111,6 +112,7 @@ const getComparedTimestamp = (
 };
 
 export const CommunityView = () => {
+  const { t } = useTranslation('common');
   const currentSeller = useCurrentSeller();
   const isAboveBreakpoint = useIsAboveBreakpoint("lg");
   const navigate = useNavigate();
@@ -173,7 +175,7 @@ export const CommunityView = () => {
           })
           .catch((e: unknown) => {
             if (!(e instanceof AbortError))
-              showAlert("Failed to mark the message as read. Please try again later.", "error");
+              showAlert(t("errors.failed_mark_message_read"), "error");
           });
       }, 500),
     [],
@@ -307,7 +309,7 @@ export const CommunityView = () => {
           timestamp: selectedCommunityChat.nextOlderTimestamp,
           fetchType: "older",
         }).catch((e: unknown) => {
-          if (!(e instanceof AbortError)) showAlert("Failed to load older messages. Please try again later.", "error");
+          if (!(e instanceof AbortError)) showAlert(t("errors.failed_load_older_messages"), "error");
         });
       }
     }
@@ -319,7 +321,7 @@ export const CommunityView = () => {
           timestamp: selectedCommunityChat.nextNewerTimestamp,
           fetchType: "newer",
         }).catch((e: unknown) => {
-          if (!(e instanceof AbortError)) showAlert("Failed to load newer messages. Please try again later.", "error");
+          if (!(e instanceof AbortError)) showAlert(t("errors.failed_load_newer_messages"), "error");
         });
       }
     }
@@ -479,7 +481,7 @@ export const CommunityView = () => {
           fetchType: "around",
           timestamp: lastReadMessageCreatedAt ?? new Date(0).toISOString(),
         }).catch((e: unknown) => {
-          if (!(e instanceof AbortError)) showAlert("Failed to load messages. Please try again later.", "error");
+          if (!(e instanceof AbortError)) showAlert(t("errors.failed_load_messages"), "error");
         });
       }
     }
@@ -562,7 +564,7 @@ export const CommunityView = () => {
       settings,
     });
     setNotificationSettings((prev) => ({ ...prev, [community.seller.id]: response.settings }));
-    showAlert("Changes saved!", "success");
+    showAlert(t("actions.changes_saved"), "success");
     setShowNotificationsSettings(false);
     return response;
   };
@@ -576,7 +578,7 @@ export const CommunityView = () => {
     if (selectedCommunity && selectedCommunity.unread_count > 0) {
       fetchMessages(selectedCommunity.id, { fetchType: "older", timestamp: new Date().toISOString() }, true).catch(
         (e: unknown) => {
-          if (!(e instanceof AbortError)) showAlert("Failed to load messages. Please try again later.", "error");
+          if (!(e instanceof AbortError)) showAlert(t("errors.failed_load_messages"), "error");
         },
       );
     } else {
@@ -770,7 +772,7 @@ const NotificationsSettingsModal = ({
               try {
                 await onSave(updatedSettings);
               } catch (_error: unknown) {
-                showAlert("Failed to save changes. Please try again later.", "error");
+                showAlert(t("errors.failed_save_changes"), "error");
               } finally {
                 setIsSaving(false);
               }
