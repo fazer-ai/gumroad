@@ -241,6 +241,7 @@ export const Product = ({
   wishlists?: WishlistForProduct[];
   disableAnalytics?: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const [pageLoaded, setPageLoaded] = React.useState(false);
   const descriptionEditor = useRichTextEditor({
     // delay initialization to avoid errors in SSR
@@ -294,12 +295,12 @@ export const Product = ({
       setSelection?.({ ...selection, price: { ...selection.price, error: true } });
       if (selection.price.value === null) {
         configurationSelectorRef?.current?.focusRequiredInput();
-        showAlert("You must input an amount", "warning");
+        showAlert(t("errors.must_input_amount"), "warning");
       }
       return false;
     }
     if (product.native_type === "call" && !selection.callStartTime) {
-      showAlert("You must select a date and time for the call", "warning");
+      showAlert(t("errors.must_select_date_time_call"), "warning");
       return false;
     }
     return true;
