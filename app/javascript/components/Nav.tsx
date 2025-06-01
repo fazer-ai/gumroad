@@ -1,5 +1,6 @@
 import cx from "classnames";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { cast } from "ts-safe-cast";
 
 import { escapeRegExp } from "$app/utils";
@@ -89,6 +90,7 @@ export const Nav = ({ title, children, footer, compact }: Props) => {
 };
 
 export const UnbecomeDropdownItem = () => {
+  const { t } = useTranslation('common');
   const makeRequest = asyncVoid(async (ev: React.MouseEvent<HTMLAnchorElement>) => {
     ev.preventDefault();
 
@@ -100,7 +102,7 @@ export const UnbecomeDropdownItem = () => {
       }
     } catch (e) {
       assertResponseError(e);
-      showAlert("Something went wrong.", "error");
+      showAlert(t("errors.something_went_wrong"), "error");
     }
   });
 

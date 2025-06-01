@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import FileUtils from "$app/utils/file";
 
@@ -28,6 +29,7 @@ export const ImageUploader = ({
   imageAlt: string;
   disabled?: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const [uploading, setUploading] = React.useState(false);
 
   const overlayColor = "rgb(var(--filled) / calc(1 - var(--disabled-opacity)))";
@@ -51,7 +53,7 @@ export const ImageUploader = ({
                 const file = evt.target.files?.[0];
                 if (!file) return;
                 if (!FileUtils.isFileNameExtensionAllowed(file.name, allowedExtensions))
-                  return showAlert("Invalid file type.", "error");
+                  return showAlert(t("errors.invalid_file_type"), "error");
 
                 setUploading(true);
                 void onSelectFile(file).finally(() => setUploading(false));
