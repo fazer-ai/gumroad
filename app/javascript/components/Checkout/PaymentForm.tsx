@@ -13,6 +13,7 @@ import * as BraintreeDataCollector from "braintree-web/data-collector";
 import * as BraintreePaypal from "braintree-web/paypal";
 import cx from "classnames";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { useBraintreeToken } from "$app/data/braintree_client_token_data";
 import { preparePaymentRequestPaymentMethodData } from "$app/data/card_payment_method_data";
@@ -419,9 +420,10 @@ const PaymentMethodRadio = ({
 };
 
 const useFail = () => {
+  const { t } = useTranslation('checkout');
   const [_, dispatch] = useState();
   return () => {
-    showAlert("Sorry, something went wrong. You were not charged.", "error");
+    showAlert(t("errors.something_went_wrong"), "error");
     dispatch({ type: "cancel" });
   };
 };

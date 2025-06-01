@@ -1,6 +1,7 @@
 import debounce from "lodash/debounce";
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { deleteFollower, fetchFollowers, Follower } from "$app/data/followers";
 import { register } from "$app/utils/serverComponentUtil";
@@ -62,6 +63,7 @@ const Layout = ({
 type Props = { followers: Follower[]; per_page: number; total: number };
 
 export const FollowersPage = ({ followers: initialFollowers, per_page, total }: Props) => {
+  const { t } = useTranslation('common');
   const userAgentInfo = useUserAgentInfo();
 
   const [loading, setLoading] = React.useState(false);
@@ -87,7 +89,7 @@ export const FollowersPage = ({ followers: initialFollowers, per_page, total }: 
       setFollowers(page === 1 ? response.paged_followers : [...followers, ...response.paged_followers]);
       setTotalFilteredCount(response.total_count);
     } catch {
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
     setLoading(false);
   };
@@ -106,9 +108,9 @@ export const FollowersPage = ({ followers: initialFollowers, per_page, total }: 
       setTotalFilteredCount(totalFilteredCount - 1);
       setFollowers(followers.filter((follower) => follower.id !== id));
       setSelectedFollowerId(null);
-      showAlert("Follower removed!", "success");
+      showAlert(t("actions.follower_removed"), "success");
     } catch {
-      showAlert("Failed to remove follower.", "error");
+      showAlert(t("errors.failed_remove_follower"), "error");
     }
     setRemoving(false);
   };

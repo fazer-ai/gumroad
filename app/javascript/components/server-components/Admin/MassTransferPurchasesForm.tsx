@@ -1,17 +1,20 @@
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { register } from "$app/utils/serverComponentUtil";
 
 import { Form } from "$app/components/Admin/Form";
 import { showAlert } from "$app/components/server-components/Alert";
 
-export const MassTransferPurchasesForm = ({ user_id }: { user_id: number }) => (
-  <Form
-    url={Routes.mass_transfer_purchases_admin_user_path(user_id)}
-    method="POST"
-    confirmMessage="Are you sure you want to Mass Transfer purchases for this user?"
-    onSuccess={() => showAlert("Successfully transferred purchases.", "success")}
+export const MassTransferPurchasesForm = ({ user_id }: { user_id: number }) => {
+  const { t } = useTranslation('common');
+  return (
+    <Form
+      url={Routes.mass_transfer_purchases_admin_user_path(user_id)}
+      method="POST"
+      confirmMessage="Are you sure you want to Mass Transfer purchases for this user?"
+      onSuccess={() => showAlert(t("actions.successfully_transferred_purchases"), "success")}
   >
     {(isLoading) => (
       <fieldset>
@@ -24,7 +27,8 @@ export const MassTransferPurchasesForm = ({ user_id }: { user_id: number }) => (
         <small>Are you sure you want to Mass Transfer purchases for this user?</small>
       </fieldset>
     )}
-  </Form>
-);
+    </Form>
+  );
+};
 
 export default register({ component: MassTransferPurchasesForm, propParser: createCast() });

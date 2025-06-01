@@ -2,6 +2,7 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import { Link, useLoaderData, useNavigate, useNavigation, useRevalidator, useSearchParams } from "react-router-dom";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   deleteUtmLink,
@@ -55,6 +56,7 @@ const utmLinkWithStats = (utmLink: SavedUtmLink, stats?: UtmLinkStats) => {
 };
 
 const UtmLinkList = () => {
+  const { t } = useTranslation('common');
   const navigation = useNavigation();
   const navigate = useNavigate();
   const revalidator = useRevalidator();
@@ -281,10 +283,10 @@ const UtmLinkList = () => {
                           setDeletingUtmLink({ ...deletingUtmLink, state: "deleting" });
                           await deleteUtmLink(deletingUtmLink.id);
                           revalidator.revalidate();
-                          showAlert("Link deleted!", "success");
+                          showAlert(t("actions.link_deleted"), "success");
                         } catch (e) {
                           assertResponseError(e);
-                          showAlert("Failed to delete link. Please try again.", "error");
+                          showAlert(t("errors.failed_delete_link_try_again"), "error");
                         } finally {
                           setDeletingUtmLink(null);
                           setSelectedUtmLink(null);

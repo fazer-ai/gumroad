@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { asyncVoid } from "$app/utils/promise";
 import { request } from "$app/utils/request";
@@ -15,6 +16,7 @@ export const TextInput = ({
   type: "shortAnswer" | "longAnswer";
   label: string;
 }) => {
+  const { t } = useTranslation('common');
   const uid = React.useId();
   const purchaseInfo = usePurchaseInfo();
   const purchaseCustomFields = usePurchaseCustomFields();
@@ -50,7 +52,7 @@ export const TextInput = ({
       });
       setIsLoading(false);
       setSavedValue(newValue);
-      showAlert("Response saved!", "success");
+      showAlert(t("actions.response_saved"), "success");
     }),
     disabled: isLoading,
   };

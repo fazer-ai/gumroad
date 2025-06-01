@@ -4,6 +4,7 @@ import { EditorView } from "@tiptap/pm/view";
 import { Editor, EditorContent } from "@tiptap/react";
 import * as React from "react";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { assertDefined } from "$app/utils/assert";
 import FileUtils, { ALLOWED_EXTENSIONS } from "$app/utils/file";
@@ -141,6 +142,7 @@ export const DescriptionEditor = ({
   setImagesUploading: React.Dispatch<React.SetStateAction<Set<File>>>;
   audioPreviewsEnabled: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const uid = React.useId();
   const [isMounted, setIsMounted] = React.useState(false);
   useRunOnce(() => setIsMounted(true));
@@ -190,7 +192,7 @@ export const DescriptionEditor = ({
         if (!audioPreviewsEnabled) return;
 
         if (!FileUtils.isAudioExtension(FileUtils.getFileExtension(file.name).toUpperCase())) {
-          showAlert("Only audio files are allowed", "error");
+          showAlert(t("errors.only_audio_files_allowed"), "error");
           return;
         }
 
@@ -200,7 +202,7 @@ export const DescriptionEditor = ({
         });
         if (publicFileEmbeds.length >= MAX_ALLOWED_PUBLIC_FILES_COUNT) {
           showAlert(
-            `You can only upload up to ${MAX_ALLOWED_PUBLIC_FILES_COUNT} audio previews in the description`,
+            t("errors.max_audio_previews_limit", { count: MAX_ALLOWED_PUBLIC_FILES_COUNT }),
             "error",
           );
           return;
@@ -212,9 +214,9 @@ export const DescriptionEditor = ({
         );
         if (file.size > MAX_ALLOWED_PUBLIC_FILE_SIZE_IN_BYTES) {
           showAlert(
-            `File is too large (max allowed size is ${FileUtils.getReadableFileSize(
-              MAX_ALLOWED_PUBLIC_FILE_SIZE_IN_BYTES,
-            )})`,
+            t("errors.file_too_large", { 
+              maxSize: FileUtils.getReadableFileSize(MAX_ALLOWED_PUBLIC_FILE_SIZE_IN_BYTES) 
+            }),
             "error",
           );
           return;
@@ -271,13 +273,13 @@ export const DescriptionEditor = ({
               .catch((error: unknown) => {
                 fileUploadCleanup(editor, src);
                 onError?.(error instanceof Error ? error : null);
-                showAlert("Failed to upload the file. Please try again.", "error");
+                showAlert(t("errors.failed_upload_file_try_again"), "error");
               });
           },
           onError: (error: Error | null) => {
             fileUploadCleanup(editor, src);
             onError?.(error);
-            showAlert("Failed to upload the file. Please try again.", "error");
+            showAlert(t("errors.failed_upload_file_try_again"), "error");
           },
         });
         setActiveUploaders((prev) => prev.set(src, uploader));

@@ -1,6 +1,7 @@
 import cx from "classnames";
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   createUpsell,
@@ -83,6 +84,7 @@ const UpsellsPage = (props: {
   products: { id: string; name: string; has_multiple_versions: boolean; native_type: ProductNativeType }[];
   pagination: PaginationProps;
 }) => {
+  const { t } = useTranslation('common');
   const loggedInUser = useLoggedInUser();
   const isReadOnly = !loggedInUser?.policies.upsell.create;
 
@@ -158,7 +160,7 @@ const UpsellsPage = (props: {
       setState(await createUpsell(upsellPayload));
       setView("list");
       setSelectedUpsellId(null);
-      showAlert("Successfully created upsell!", "success");
+      showAlert(t("actions.successfully_created_upsell"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");
@@ -173,7 +175,7 @@ const UpsellsPage = (props: {
       setState(await updateUpsell(selectedUpsellId, upsellPayload));
       setView("list");
       setSelectedUpsellId(null);
-      showAlert("Successfully updated upsell!", "success");
+      showAlert(t("actions.successfully_updated_upsell"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");
@@ -187,7 +189,7 @@ const UpsellsPage = (props: {
       setIsLoading(true);
       setState(await deleteUpsell(selectedUpsellId));
       setSelectedUpsellId(null);
-      showAlert("Successfully deleted upsell!", "success");
+      showAlert(t("actions.successfully_deleted_upsell"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");
@@ -474,6 +476,7 @@ const Form = ({
   onCancel: () => void;
   isLoading: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const uid = React.useId();
 
   const [name, setName] = React.useState<{ value: string; error?: boolean }>({ value: upsell?.name ?? "" });
@@ -577,7 +580,7 @@ const Form = ({
       }
 
       if (discount) setDiscount({ ...discount, error: discount.value === null });
-      showAlert("Please complete all required fields.", "error");
+      showAlert(t("errors.please_complete_all_required_fields"), "error");
       return;
     }
 

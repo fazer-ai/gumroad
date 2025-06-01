@@ -1,5 +1,6 @@
 import cx from "classnames";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { getAutocompleteSearchResults, AutocompleteSearchResults, deleteAutocompleteSearch } from "$app/data/discover";
 import { escapeRegExp } from "$app/utils";
@@ -15,6 +16,7 @@ import { useOnChange } from "$app/components/useOnChange";
 import thumbnailPlaceholder from "$assets/images/placeholders/product-cover.png";
 
 export const Search = ({ query, setQuery }: { query?: string | undefined; setQuery: (query: string) => void }) => {
+  const { t } = useTranslation('common');
   const [enteredQuery, setEnteredQuery] = React.useState(query ?? "");
   useOnChange(() => setEnteredQuery(query ?? ""), [query]);
 
@@ -27,7 +29,7 @@ export const Search = ({ query, setQuery }: { query?: string | undefined; setQue
         setResults(await getAutocompleteSearchResults({ query: enteredQuery }, abortController.signal));
       } catch (e) {
         assertResponseError(e);
-        showAlert("Sorry, something went wrong. Please try again.", "error");
+        showAlert(t("errors.sorry_something_went_wrong"), "error");
       }
     }),
     300,

@@ -1,5 +1,6 @@
 import cx from "classnames";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "$app/components/Icons";
 import { showAlert } from "$app/components/server-components/Alert";
@@ -16,10 +17,11 @@ export const ChatMessageInput = React.forwardRef<
     onHeightChange: (height: number) => void;
   }
 >(({ draft, updateDraftMessage, onSend, onHeightChange }, ref) => {
+  const { t } = useTranslation('common');
   const handleSend = React.useCallback(() => {
     if (!draft?.content || draft.content.length === 0) return;
     if (draft.content.length > MAX_MESSAGE_LENGTH) {
-      showAlert("Message is too long.", "error");
+      showAlert(t("errors.message_too_long"), "error");
       return;
     }
     onSend();

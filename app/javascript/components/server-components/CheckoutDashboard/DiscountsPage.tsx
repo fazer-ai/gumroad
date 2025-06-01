@@ -1,6 +1,7 @@
 import cx from "classnames";
 import * as React from "react";
 import { createCast, is } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   OfferCodeStatistics,
@@ -132,6 +133,7 @@ const DiscountsPage = ({
   products: Product[];
   pagination: PaginationProps;
 }) => {
+  const { t } = useTranslation('common');
   const loggedInUser = useLoggedInUser();
   const [{ offerCodes, pagination }, setState] = React.useState<{
     offerCodes: OfferCode[];
@@ -252,7 +254,7 @@ const DiscountsPage = ({
   const deleteOfferCode = async (id: string) => {
     await deleteDiscount(id);
     reloadDiscounts();
-    showAlert("Successfully deleted discount!", "success");
+    showAlert(t("actions.discount_deleted_successfully"), "success");
   };
 
   const currentSeller = useCurrentSeller();
@@ -632,7 +634,7 @@ const DiscountsPage = ({
           });
           resetQueryState();
           setState({ offerCodes, pagination });
-          showAlert("Successfully updated discount!", "success");
+          showAlert(t("actions.discount_updated_successfully"), "success");
           setView("list");
         } catch (e) {
           assertResponseError(e);
@@ -670,7 +672,7 @@ const DiscountsPage = ({
           resetQueryState();
           setState({ offerCodes, pagination });
           setSelectedOfferCodeId(offerCodes[0]?.id ?? null);
-          showAlert("Successfully created discount!", "success");
+          showAlert(t("actions.discount_created_successfully"), "success");
           setView("list");
         } catch (e) {
           assertResponseError(e);

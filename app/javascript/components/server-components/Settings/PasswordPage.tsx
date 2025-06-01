@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { updatePassword } from "$app/data/password";
 import { SettingPage } from "$app/parsers/settings";
@@ -19,6 +20,7 @@ type Props = {
   require_old_password: boolean;
 };
 const PasswordPage = (props: Props) => {
+  const { t } = useTranslation('common');
   const uid = React.useId();
   const [password, setPassword] = React.useState({ old: "", new: "" });
   const [requireOldPassword, setRequireOldPassword] = React.useState(props.require_old_password);
@@ -31,12 +33,12 @@ const PasswordPage = (props: Props) => {
           e.preventDefault();
 
           if (password.new.length < MIN_PASSWORD_LENGTH) {
-            showAlert("Your new password is too short.", "error");
+            showAlert(t("errors.password_too_short"), "error");
             return;
           }
 
           if (password.new.length >= MAX_PASSWORD_LENGTH) {
-            showAlert("Your new password is too long.", "error");
+            showAlert(t("errors.password_too_long"), "error");
             return;
           }
 
@@ -47,7 +49,7 @@ const PasswordPage = (props: Props) => {
             if (result.new_password) setRequireOldPassword(true);
             setPassword({ old: "", new: "" });
 
-            showAlert("You have successfully changed your password.", "success");
+            showAlert(t("actions.password_changed_successfully"), "success");
           } catch (e) {
             assertResponseError(e);
             showAlert(e.message, "error");

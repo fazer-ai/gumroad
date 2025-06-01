@@ -13,6 +13,7 @@ import {
   useRevalidator,
 } from "react-router-dom";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   addCollaborator,
@@ -163,6 +164,7 @@ const Collaborators = () => {
 
   const { collaborators, collaborators_disabled_reason, has_incoming_collaborators } =
     cast<CollaboratorsData>(useLoaderData());
+  const { t } = useTranslation('common');
   const [selectedCollaborator, setSelectedCollaborator] = React.useState<Collaborator | null>(null);
 
   const remove = asyncVoid(async (collaboratorId: string) => {
@@ -170,10 +172,10 @@ const Collaborators = () => {
       await removeCollaborator(collaboratorId);
       setSelectedCollaborator(null);
       revalidator.revalidate();
-      showAlert("The collaborator was removed successfully.", "success");
+      showAlert(t("actions.collaborator_removed_successfully"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Failed to remove the collaborator.", "error");
+      showAlert(t("errors.failed_remove_collaborator"), "error");
     }
   });
 
@@ -315,6 +317,7 @@ type CollaboratorProduct = CollaboratorFormProduct & {
 };
 
 const CollaboratorForm = () => {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const navigation = useNavigation();
 
@@ -418,7 +421,7 @@ const CollaboratorForm = () => {
     );
 
     if (enabledProducts.length === 0) {
-      showAlert("At least one product must be selected", "error");
+      showAlert(t("errors.at_least_one_product_selected"), "error");
       return;
     }
 
@@ -426,7 +429,7 @@ const CollaboratorForm = () => {
       defaultPercentCommission.hasError ||
       enabledProducts.some((product) => !validCommission(product.percent_commission))
     ) {
-      showAlert("Collaborator cut must be 50% or less", "error");
+      showAlert(t("errors.collaborator_cut_max_50_percent"), "error");
       return;
     }
 
@@ -451,7 +454,7 @@ const CollaboratorForm = () => {
             ...data,
             email: collaboratorEmail.value,
           }));
-      showAlert("Changes saved!", "success");
+      showAlert(t("actions.changes_saved"), "success");
       navigate("/collaborators");
     } catch (e) {
       assertResponseError(e);

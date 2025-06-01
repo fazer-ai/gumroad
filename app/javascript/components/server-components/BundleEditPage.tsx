@@ -2,6 +2,7 @@ import * as React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { StaticRouterProvider } from "react-router-dom/server";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { OtherRefundPolicy } from "$app/data/products/other_refund_policies";
 import { Thumbnail } from "$app/data/thumbnails";
@@ -72,6 +73,7 @@ const BundleEditPage = ({
   seller_refund_policy_enabled,
   seller_refund_policy,
 }: Props) => {
+  const { t } = useTranslation('common');
   const [bundle, setBundle] = React.useState(initialBundle);
   const updateBundle = (update: Partial<Bundle> | ((bundle: Bundle) => void)) =>
     setBundle((prevBundle) => {
@@ -83,7 +85,7 @@ const BundleEditPage = ({
 
   useRunOnce(() => {
     if (!is_bundle)
-      showAlert("Select products and save your changes to finish converting this product to a bundle.", "warning");
+      showAlert(t("warnings.select_products_to_convert_bundle"), "warning");
   });
 
   const router = createBrowserRouter(routes);

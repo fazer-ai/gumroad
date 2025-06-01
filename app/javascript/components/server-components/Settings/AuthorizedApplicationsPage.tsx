@@ -1,6 +1,7 @@
 import { parseISO } from "date-fns";
 import * as React from "react";
 import { createCast, cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { SettingPage } from "$app/parsers/settings";
 import { asyncVoid } from "$app/utils/promise";
@@ -58,6 +59,7 @@ type Props = {
 };
 
 const AuthorizedApplicationsPage = (props: Props) => {
+  const { t } = useTranslation('common');
   const userAgentInfo = useUserAgentInfo();
   const [applications, setApplications] = React.useState(props.authorized_applications);
   const [revokingAccessForApp, setRevokingAccessForApp] = React.useState<{ id: string; revoking?: boolean } | null>(
@@ -82,7 +84,7 @@ const AuthorizedApplicationsPage = (props: Props) => {
       }
     } catch (error) {
       assertResponseError(error);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
     setRevokingAccessForApp(null);
   });

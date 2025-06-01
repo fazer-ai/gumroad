@@ -6,6 +6,7 @@ import partition from "lodash/partition";
 import * as React from "react";
 import { ReactSortable } from "react-sortablejs";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { fetchDropboxFiles, ResponseDropboxFile, uploadDropboxFile } from "$app/data/dropbox_upload";
 import { Post } from "$app/data/workflows";
@@ -95,6 +96,7 @@ export const extensions = (productId: string, extraExtensions: TiptapNode[] = []
 ];
 
 const ContentTabContent = ({ selectedVariantId }: { selectedVariantId: string | null }) => {
+  const { t } = useTranslation('common');
   const { id, product, updateProduct, seller, save, existingFiles, setExistingFiles, uniquePermalink } =
     useProductEditContext();
   const uid = React.useId();
@@ -306,7 +308,7 @@ const ContentTabContent = ({ selectedVariantId }: { selectedVariantId: string | 
   const onInsertPosts = () => {
     if (!editor) return;
     if (selectedPage?.description && editor.$node(Posts.name)) {
-      showAlert("You can't insert a list of posts more than once per page", "error");
+      showAlert(t("errors.cant_insert_posts_more_than_once"), "error");
     } else {
       editor.chain().focus().insertPosts({}).run();
     }
@@ -452,7 +454,7 @@ const ContentTabContent = ({ selectedVariantId }: { selectedVariantId: string | 
   const onInsertMoreLikeThis = () => {
     if (!editor) return;
     if (selectedPage?.description && editor.$node(MoreLikeThis.name)) {
-      showAlert("You can't insert a More like this block more than once per page", "error");
+      showAlert(t("errors.cant_insert_more_like_this_more_than_once"), "error");
     } else {
       editor
         .chain()
@@ -467,7 +469,7 @@ const ContentTabContent = ({ selectedVariantId }: { selectedVariantId: string | 
     if (!addingButton) return;
 
     const href = validateUrl(addingButton.url);
-    if (!href) return showAlert("Please enter a valid URL.", "error");
+    if (!href) return showAlert(t("errors.please_enter_valid_url"), "error");
     editor
       .chain()
       .focus()

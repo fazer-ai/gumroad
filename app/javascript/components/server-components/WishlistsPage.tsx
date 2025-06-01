@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { deleteWishlist, updateWishlist } from "$app/data/wishlists";
 import { assertResponseError } from "$app/utils/request";
@@ -33,6 +34,7 @@ const WishlistsPage = ({
   reviews_page_enabled: boolean;
   following_wishlists_enabled: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const [wishlists, setWishlists] = React.useState<Wishlist[]>(preloadedWishlists);
   const [deletingWishlist, setConfirmingDeleteWishlist] = React.useState<Wishlist | null>(null);
   const [isDeleting, setIsDeleting] = React.useState(false);
@@ -44,10 +46,10 @@ const WishlistsPage = ({
       await deleteWishlist({ wishlistId: id });
       setWishlists(wishlists.filter((wishlist) => wishlist.id !== id));
       setConfirmingDeleteWishlist(null);
-      showAlert("Wishlist deleted!", "success");
+      showAlert(t("actions.wishlist_deleted"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     } finally {
       setIsDeleting(false);
     }
@@ -59,10 +61,10 @@ const WishlistsPage = ({
         wishlists.map((wishlist) => (wishlist.id === id ? { ...wishlist, discover_opted_out: optOut } : wishlist)),
       );
       await updateWishlist({ id, discover_opted_out: optOut });
-      showAlert(optOut ? "Opted out of Gumroad Discover." : "Wishlist is now discoverable!", "success");
+      showAlert(optOut ? t("actions.opted_out_discover") : t("actions.wishlist_discoverable"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
   };
 

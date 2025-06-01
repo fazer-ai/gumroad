@@ -1,6 +1,7 @@
 import { lightFormat } from "date-fns";
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { AudienceDataByDate, fetchAudienceDataByDate } from "$app/data/audience";
 import { AbortError } from "$app/utils/request";
@@ -22,6 +23,7 @@ import { WithTooltip } from "$app/components/WithTooltip";
 import placeholder from "$assets/images/placeholders/audience.png";
 
 const AudiencePage = ({ total_follower_count }: { total_follower_count: number }) => {
+  const { t } = useTranslation('common');
   const dateRange = useAnalyticsDateRange();
   const [data, setData] = React.useState<AudienceDataByDate | null>(null);
   const startTime = lightFormat(dateRange.from, "yyyy-MM-dd");
@@ -43,7 +45,7 @@ const AudiencePage = ({ total_follower_count }: { total_follower_count: number }
         activeRequest.current = null;
       } catch (e) {
         if (e instanceof AbortError) return;
-        showAlert("Sorry, something went wrong. Please try again.", "error");
+        showAlert(t("errors.sorry_something_went_wrong"), "error");
       }
     };
     void loadData();

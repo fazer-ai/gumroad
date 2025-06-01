@@ -1,6 +1,7 @@
 import reverse from "lodash/reverse";
 import * as React from "react";
 import { createCast, cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { SurchargesResponse } from "$app/data/customer_surcharge";
 import { startOrderCreation } from "$app/data/order";
@@ -157,6 +158,7 @@ export const CheckoutPage = ({
   default_tip_option,
   ...props
 }: Props) => {
+  const { t } = useTranslation('common');
   const user = useLoggedInUser();
   const email = props.cart?.email ?? user?.email ?? "";
   const [cart, setCart] = React.useState<CartState>(() => {
@@ -247,7 +249,7 @@ export const CheckoutPage = ({
         .then(setSurchargesIfAccepted)
         .catch((e: unknown) => {
           assertResponseError(e);
-          showAlert("Sorry, something went wrong. Please try again.", "error");
+          showAlert(t("errors.sorry_something_went_wrong"), "error");
           dispatch({ type: "cancel" });
         }),
     [currentOffer],

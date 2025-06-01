@@ -1,17 +1,20 @@
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { register } from "$app/utils/serverComponentUtil";
 
 import { Form } from "$app/components/Admin/Form";
 import { showAlert } from "$app/components/server-components/Alert";
 
-export const AdminFlagForFraudForm = ({ user_id }: { user_id: number }) => (
-  <Form
-    url={Routes.flag_for_fraud_admin_user_path(user_id)}
-    method="POST"
-    confirmMessage={`Are you sure you want to flag user ${user_id} for fraud?`}
-    onSuccess={() => showAlert("Flagged.", "success")}
+export const AdminFlagForFraudForm = ({ user_id }: { user_id: number }) => {
+  const { t } = useTranslation('common');
+  return (
+    <Form
+      url={Routes.flag_for_fraud_admin_user_path(user_id)}
+      method="POST"
+      confirmMessage={`Are you sure you want to flag user ${user_id} for fraud?`}
+      onSuccess={() => showAlert(t("actions.flagged"), "success")}
   >
     {(isLoading) => (
       <fieldset>
@@ -23,7 +26,8 @@ export const AdminFlagForFraudForm = ({ user_id }: { user_id: number }) => (
         </div>
       </fieldset>
     )}
-  </Form>
-);
+    </Form>
+  );
+};
 
 export default register({ component: AdminFlagForFraudForm, propParser: createCast() });

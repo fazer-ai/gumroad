@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { fetchAccountInfo, fetchCalendarList, getOAuthUrl } from "$app/data/google_calendar_integration";
 import { startOauthRedirectChecker } from "$app/utils/oauth";
@@ -27,6 +28,7 @@ export const GoogleCalendarIntegrationEditor = ({
   integration: GoogleCalendarIntegration;
   onChange: (integration: GoogleCalendarIntegration) => void;
 }) => {
+  const { t } = useTranslation('common');
   const [isEnabled, setIsEnabled] = React.useState(!!integration);
   const [isLoading, setIsLoading] = React.useState(false);
   const [calendars, setCalendars] = React.useState<{ id: string; summary: string }[]>(
@@ -45,7 +47,7 @@ export const GoogleCalendarIntegrationEditor = ({
         .then(setCalendars)
         .catch((e: unknown) => {
           assertResponseError(e);
-          showAlert("Could not fetch calendars, please try again.", "error");
+          showAlert(t("errors.could_not_fetch_calendars"), "error");
         })
         .finally(() => {
           setIsLoading(false);
@@ -76,13 +78,13 @@ export const GoogleCalendarIntegrationEditor = ({
           }
         } catch (e) {
           assertResponseError(e);
-          showAlert("Could not connect to your Google Calendar account, please try again.", "error");
+          showAlert(t("errors.could_not_connect_google_calendar"), "error");
         } finally {
           setIsLoading(false);
         }
       },
       onError: () => {
-        showAlert("Could not connect to your Google Calendar account, please try again.", "error");
+        showAlert(t("errors.could_not_connect_google_calendar"), "error");
         setIsLoading(false);
       },
       onPopupClose: () => setIsLoading(false),

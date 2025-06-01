@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Link, useMatches, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { saveBundle } from "$app/data/bundle";
 import { setProductPublished } from "$app/data/publish_product";
@@ -42,12 +43,13 @@ export const Layout = ({
   const [match] = useMatches();
   const tab = match?.handle ?? "product";
 
+  const { t } = useTranslation('common');
   const [isSaving, setIsSaving] = React.useState(false);
   const handleSave = async () => {
     try {
       setIsSaving(true);
       await saveBundle(id, bundle);
-      showAlert("Changes saved!", "success");
+      showAlert(t("actions.changes_saved"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");
@@ -62,7 +64,7 @@ export const Layout = ({
       await saveBundle(id, bundle);
       await setProductPublished(uniquePermalink, published);
       updateBundle({ is_published: published });
-      showAlert(published ? "Published!" : "Unpublished!", "success");
+      showAlert(published ? t("actions.published") : t("actions.unpublished"), "success");
       if (tab === "share") navigate(`/bundles/${id}/content`);
     } catch (e) {
       assertResponseError(e);
@@ -87,9 +89,9 @@ export const Layout = ({
 
   const onTabClick = (e: React.MouseEvent<HTMLAnchorElement>, callback?: () => void) => {
     const message = isUploadingFiles
-      ? "Some files are still uploading, please wait..."
+      ? t("errors.files_still_uploading")
       : isUploadingFilesOrImages
-        ? "Some images are still uploading, please wait..."
+        ? t("errors.images_still_uploading")
         : undefined;
 
     if (message) {
@@ -155,7 +157,7 @@ export const Layout = ({
                 if (!bundle.is_published) {
                   evt.preventDefault();
                   showAlert(
-                    "Not yet! You've got to publish your awesome product before you can share it with your audience and the world.",
+                    t("errors.must_publish_before_share"),
                     "warning",
                   );
                 }

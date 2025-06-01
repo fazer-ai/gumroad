@@ -1,5 +1,6 @@
 import { differenceInYears, parseISO } from "date-fns";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { addPurchaseToLibrary } from "$app/data/account";
 import { deletePurchasedProduct } from "$app/data/library";
@@ -76,6 +77,7 @@ export const Layout = ({
   pageList,
   children,
 }: LayoutProps & { headerActions?: React.ReactNode; pageList?: React.ReactNode; children: React.ReactNode }) => {
+  const { t } = useTranslation('common');
   const loggedInUser = useLoggedInUser();
   const [isResendingReceipt, setIsResendingReceipt] = React.useState(false);
   const isDesktop = useIsAboveBreakpoint("lg");
@@ -98,10 +100,10 @@ export const Layout = ({
         url: Routes.resend_receipt_purchase_path(purchaseId),
         accept: "json",
       });
-      showAlert("Receipt resent", "success");
+      showAlert(t("actions.receipt_resent"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
     setIsResendingReceipt(false);
   });
@@ -342,6 +344,7 @@ const PurchaseDeleteButton = ({
   product_name: string | null;
   small?: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
 
@@ -349,11 +352,11 @@ const PurchaseDeleteButton = ({
     setIsDeleting(true);
     try {
       await deletePurchasedProduct({ purchase_id });
-      showAlert("Product deleted!", "success");
+      showAlert(t("actions.product_deleted"), "success");
       window.location.href = Routes.library_path();
     } catch (e) {
       assertResponseError(e);
-      showAlert("Something went wrong.", "error");
+      showAlert(t("errors.something_went_wrong"), "error");
     }
     setIsDeleting(false);
   });
@@ -392,6 +395,7 @@ type AddToLibraryProps = {
   purchase_email: string;
 };
 const AddToLibrary = ({ add_to_library_option, terms_page_url, purchase_id, purchase_email }: AddToLibraryProps) => {
+  const { t } = useTranslation('common');
   const [password, setPassword] = React.useState("");
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -402,7 +406,7 @@ const AddToLibrary = ({ add_to_library_option, terms_page_url, purchase_id, purc
       window.location.href = result.redirectLocation;
     } catch (error) {
       assertResponseError(error);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
     setIsSubmitting(false);
   });

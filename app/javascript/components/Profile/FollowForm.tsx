@@ -1,5 +1,6 @@
 import cx from "classnames";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { followSeller } from "$app/data/follow_seller";
 import { CreatorProfile } from "$app/parsers/profile";
@@ -19,6 +20,7 @@ export const FollowForm = ({
   buttonColor?: ButtonColor;
   buttonLabel?: string;
 }) => {
+  const { t } = useTranslation('common');
   const loggedInUser = useLoggedInUser();
   const isOwnProfile = loggedInUser?.id === creatorProfile.external_id;
   const [email, setEmail] = React.useState(isOwnProfile ? "" : (loggedInUser?.email ?? ""));
@@ -35,7 +37,7 @@ export const FollowForm = ({
     }
 
     if (isOwnProfile) {
-      showAlert("As the creator of this profile, you can't follow yourself!", "warning");
+      showAlert(t("errors.cannot_follow_yourself"), "warning");
       return;
     }
 
@@ -45,7 +47,7 @@ export const FollowForm = ({
       setFormStatus("success");
       showAlert(response.message, "success");
     } else {
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
       setFormStatus("initial");
     }
   };

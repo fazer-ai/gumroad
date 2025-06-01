@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { formatPriceCentsWithCurrencySymbol } from "$app/utils/currency";
 import { register } from "$app/utils/serverComponentUtil";
@@ -29,12 +30,14 @@ export const AdminManualPayoutForm = ({
   unpaid_balance_up_to_date: number;
   currency: string | null;
   ask_confirmation: boolean;
-}) => (
+}) => {
+  const { t } = useTranslation('common');
+  return (
   <Form
     url={Routes.admin_pay_user_path(user_id)}
     method="POST"
     confirmMessage={ask_confirmation ? "DON'T USE UNLESS to transfer the balance to Stripe Connect account" : false}
-    onSuccess={() => showAlert("Successfully issued payout.", "success")}
+    onSuccess={() => showAlert(t("actions.successfully_issued_payout"), "success")}
   >
     {(isLoading) => (
       <fieldset>
@@ -75,6 +78,7 @@ export const AdminManualPayoutForm = ({
       </fieldset>
     )}
   </Form>
-);
+  );
+};
 
 export default register({ component: AdminManualPayoutForm, propParser: createCast() });

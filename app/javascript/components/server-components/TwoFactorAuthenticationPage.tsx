@@ -1,5 +1,6 @@
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { resendTwoFactorToken, twoFactorLogin } from "$app/data/login";
 import { assertResponseError } from "$app/utils/request";
@@ -21,6 +22,7 @@ export const TwoFactorAuthenticationPage = ({
   email: string;
   token: string | null;
 }) => {
+  const { t } = useTranslation('common');
   const next = new URL(useOriginalLocation()).searchParams.get("next");
   const uid = React.useId();
   const [token, setToken] = React.useState(initialToken ?? "");
@@ -42,7 +44,7 @@ export const TwoFactorAuthenticationPage = ({
     setSaveState({ type: "submitting" });
     try {
       await resendTwoFactorToken(user_id);
-      showAlert("Resent the authentication token, please check your inbox.", "success");
+      showAlert(t("actions.resent_auth_token_check_inbox"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { createCast } from "ts-safe-cast";
 
 import { updateProfileSettings as requestUpdateProfileSettings, unlinkTwitter } from "$app/data/profile_settings";
@@ -36,6 +37,7 @@ const FONT_DESCRIPTIONS: Record<string, string> = {
 };
 
 const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...profileProps }: Props) => {
+  const { t } = useTranslation('settings');
   const { rootDomain, scheme } = useDomains();
   const loggedInUser = useLoggedInUser();
   const [creatorProfile, setCreatorProfile] = React.useState(creator_profile);
@@ -53,7 +55,7 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
   const handleSave = asyncVoid(async () => {
     try {
       await requestUpdateProfileSettings(profileSettings);
-      showAlert("Changes saved!", "success");
+      showAlert(t("profile.changes_saved"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");
@@ -81,11 +83,11 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
         <form>
           <section>
             <header>
-              <h2>Profile</h2>
+              <h2>{t("profile.title")}</h2>
             </header>
             <fieldset>
               <legend>
-                <label htmlFor={`${uid}-username`}>Username</label>
+                <label htmlFor={`${uid}-username`}>{t("profile.username")}</label>
               </legend>
               <input
                 id={`${uid}-username`}
@@ -97,12 +99,12 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
                 }
               />
               <small>
-                View your profile at: <a href={`${scheme}://${subdomain}`}>{subdomain}</a>
+                {t("profile.view_profile_at")}: <a href={`${scheme}://${subdomain}`}>{subdomain}</a>
               </small>
             </fieldset>
             <fieldset>
               <legend>
-                <label htmlFor={`${uid}-name`}>Name</label>
+                <label htmlFor={`${uid}-name`}>{t("profile.name")}</label>
               </legend>
               <input
                 id={`${uid}-name`}
@@ -117,7 +119,7 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
             </fieldset>
             <fieldset>
               <legend>
-                <label htmlFor={`${uid}-bio`}>Bio</label>
+                <label htmlFor={`${uid}-bio`}>{t("profile.bio")}</label>
               </legend>
               <textarea
                 id={`${uid}-bio`}
@@ -139,10 +141,10 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
             />
             {loggedInUser?.policies.settings_profile.manage_social_connections ? (
               <fieldset>
-                <legend>Social links</legend>
+                <legend>{t("profile.social_links")}</legend>
                 {creatorProfile.twitter_handle ? (
                   <button type="button" className="button button-twitter" onClick={handleUnlinkTwitter}>
-                    Disconnect {creatorProfile.twitter_handle} from X
+                    {t("profile.disconnect_from_x", { handle: creatorProfile.twitter_handle })}
                   </button>
                 ) : (
                   <SocialAuthButton
@@ -152,7 +154,7 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
                       x_auth_access_type: "read",
                     })}
                   >
-                    Connect to X
+                    {t("profile.connect_to_x")}
                   </SocialAuthButton>
                 )}
               </fieldset>
@@ -160,10 +162,10 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
           </section>
           <section>
             <header>
-              <h2>Design</h2>
+              <h2>{t("profile.design")}</h2>
             </header>
             <fieldset>
-              <legend>Font</legend>
+              <legend>{t("profile.font")}</legend>
               <div className="radio-buttons" role="radiogroup">
                 {(["ABC Favorit", "Inter", "Domine", "Merriweather", "Roboto Slab", "Roboto Mono"] as const).map(
                   (font) => (
@@ -188,7 +190,7 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
             <div style={{ display: "flex", gap: "var(--spacer-4)" }}>
               <fieldset>
                 <legend>
-                  <label htmlFor={`${uid}-backgroundColor`}>Background color</label>
+                  <label htmlFor={`${uid}-backgroundColor`}>{t("profile.background_color")}</label>
                 </legend>
                 <div className="color-picker">
                   <input
@@ -202,7 +204,7 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
               </fieldset>
               <fieldset>
                 <legend>
-                  <label htmlFor={`${uid}-highlightColor`}>Highlight color</label>
+                  <label htmlFor={`${uid}-highlightColor`}>{t("profile.highlight_color")}</label>
                 </legend>
                 <div className="color-picker">
                   <input
@@ -220,13 +222,13 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
       </SettingsLayout>
       <aside>
         <header>
-          <h2>Preview</h2>
-          <WithTooltip tip="Preview" position="bottom">
+          <h2>{t("profile.preview")}</h2>
+          <WithTooltip tip={t("profile.preview")} position="bottom">
             <a
               className="button"
               href={Routes.root_url({ host: creatorProfile.subdomain })}
               target="_blank"
-              aria-label="Preview"
+              aria-label={t("profile.preview")}
               rel="noreferrer"
             >
               <Icon name="arrow-diagonal-up-right" />

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { updatePurchasesContent } from "$app/data/bundle";
 import { assertResponseError } from "$app/utils/request";
@@ -8,6 +9,7 @@ import { Button } from "$app/components/Button";
 import { showAlert } from "$app/components/server-components/Alert";
 
 export const BundleContentUpdatedStatus = () => {
+  const { t } = useTranslation('common');
   const { id } = useBundleEditContext();
   const [isHidden, setIsHidden] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
@@ -16,7 +18,7 @@ export const BundleContentUpdatedStatus = () => {
     setIsLoading(true);
     try {
       await updatePurchasesContent(id);
-      showAlert("Queued an update to the content of all outdated purchases.", "success");
+      showAlert(t("actions.queued_content_update"), "success");
       setIsHidden(true);
     } catch (e) {
       assertResponseError(e);

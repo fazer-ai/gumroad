@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { joinServer, leaveServer } from "$app/data/discord_integration";
 import { DISCORD_CLIENT_ID, DISCORD_OAUTH_URL } from "$app/utils/integrations";
@@ -19,6 +20,7 @@ export const DiscordButton = ({
   redirectSettings?: { host: string; protocol: string };
   customState?: string;
 }) => {
+  const { t } = useTranslation('common');
   const [discordConnected, setDiscordConnected] = React.useState(connected);
   const [loading, setLoading] = React.useState(false);
 
@@ -40,15 +42,15 @@ export const DiscordButton = ({
       onSuccess: async (code) => {
         const response = await joinServer(code, purchaseId);
         if (response.ok) {
-          showAlert(`You've been added to the Discord server #${response.serverName}!`, "success");
+          showAlert(t("actions.discord_joined", { serverName: response.serverName }), "success");
           setDiscordConnected(true);
         } else {
-          showAlert("Could not join the Discord server, please try again.", "error");
+          showAlert(t("errors.discord_join_failed"), "error");
         }
         setLoading(false);
       },
       onError: () => {
-        showAlert("Could not join the Discord server, please try again.", "error");
+        showAlert(t("errors.discord_join_failed"), "error");
         setLoading(false);
       },
       onPopupClose: () => setLoading(false),
@@ -61,10 +63,10 @@ export const DiscordButton = ({
 
     const response = await leaveServer(purchaseId);
     if (response.ok) {
-      showAlert(`You've left the Discord server #${response.serverName}.`, "success");
+      showAlert(t("actions.discord_left", { serverName: response.serverName }), "success");
       setDiscordConnected(false);
     } else {
-      showAlert("Could not leave the Discord server.", "error");
+      showAlert(t("errors.discord_leave_failed"), "error");
     }
     setLoading(false);
   };
@@ -75,7 +77,7 @@ export const DiscordButton = ({
     </div>
   ) : (
     <Button className="button-discord" onClick={discordConnected ? leaveDiscord : openJoinDiscordPopup}>
-      {discordConnected ? "Leave Discord" : "Join Discord"}
+      {discordConnected ? t("actions.leave_discord") : t("actions.join_discord")}
     </Button>
   );
 };

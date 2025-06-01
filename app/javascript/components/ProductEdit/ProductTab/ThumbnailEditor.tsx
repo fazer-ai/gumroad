@@ -1,6 +1,7 @@
 import { DirectUpload } from "@rails/activestorage";
 import * as React from "react";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { Thumbnail, ThumbnailPayload, createThumbnail, deleteThumbnail } from "$app/data/thumbnails";
 import { AssetPreview, ProductNativeType } from "$app/parsers/product";
@@ -51,6 +52,7 @@ export const ThumbnailEditor = ({
   permalink: string;
   nativeType: ProductNativeType;
 }) => {
+  const { t } = useTranslation('common');
   const saveThumbnail = async (thumbnailPayload: ThumbnailPayload) => {
     try {
       const thumbnail = await createThumbnail(permalink, thumbnailPayload);
@@ -64,7 +66,7 @@ export const ThumbnailEditor = ({
   const removeThumbnail = async (guid: string) => {
     try {
       await deleteThumbnail(permalink, guid);
-      showAlert("Thumbnail has been deleted.", "success");
+      showAlert(t("actions.thumbnail_deleted"), "success");
       setThumbnail(null);
     } catch (e) {
       assertResponseError(e);

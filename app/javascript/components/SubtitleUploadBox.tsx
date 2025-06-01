@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import FileUtils from "$app/utils/file";
 
@@ -11,11 +12,12 @@ const acceptedSubtitleExtensions = FileUtils.getAllowedSubtitleExtensions()
   .join(",");
 
 export const SubtitleUploadBox = ({ onUploadFiles }: UploadBoxProps) => {
+  const { t } = useTranslation('common');
   const filePickerOnChange = (fileInput: HTMLInputElement) => {
     if (!fileInput.files) return;
     const files = [...fileInput.files];
     if (files.some((file) => !FileUtils.isFileNameASubtitle(file.name))) {
-      showAlert("Invalid file type.", "error");
+      showAlert(t("errors.invalid_file_type"), "error");
       return;
     }
     fileInput.value = "";

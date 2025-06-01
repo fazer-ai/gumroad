@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { asyncVoid } from "$app/utils/promise";
 import { request, assertResponseError } from "$app/utils/request";
@@ -25,6 +26,7 @@ const StripeConnectSection = ({
   isFormDisabled: boolean;
   connectAccountFeeInfoText: string;
 }) => {
+  const { t } = useTranslation('common');
   const [isDisconnecting, setisDisconnecting] = React.useState(false);
   const disconnectStripe = asyncVoid(async () => {
     setisDisconnecting(true);
@@ -38,14 +40,14 @@ const StripeConnectSection = ({
 
       const parsedResponse = cast<{ success: boolean }>(await response.json());
       if (parsedResponse.success) {
-        showAlert("Your Stripe account has been disconnected.", "success");
+        showAlert(t("actions.stripe_account_disconnected"), "success");
         window.location.reload();
       } else {
-        showAlert("Sorry, something went wrong. Please try again.", "error");
+        showAlert(t("errors.sorry_something_went_wrong"), "error");
       }
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
 
     setisDisconnecting(false);

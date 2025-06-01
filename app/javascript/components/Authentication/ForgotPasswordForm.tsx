@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { renewPassword } from "$app/data/login";
 import { assertResponseError } from "$app/utils/request";
@@ -10,6 +11,7 @@ import { showAlert } from "$app/components/server-components/Alert";
 type SaveState = { type: "initial" | "submitting" } | { type: "error"; message: string };
 
 export const ForgotPasswordForm = ({ onClose }: { onClose: () => void }) => {
+  const { t } = useTranslation('authentication');
   const uid = React.useId();
   const [email, setEmail] = React.useState("");
   const [saveState, setSaveState] = React.useState<SaveState>({ type: "initial" });
@@ -19,7 +21,7 @@ export const ForgotPasswordForm = ({ onClose }: { onClose: () => void }) => {
     setSaveState({ type: "submitting" });
     try {
       await renewPassword(email);
-      showAlert("Password reset sent! Please make sure to check your spam folder.", "success");
+      showAlert(t("forgot_password.password_reset_sent"), "success");
       setSaveState({ type: "initial" });
     } catch (e) {
       assertResponseError(e);
@@ -31,7 +33,7 @@ export const ForgotPasswordForm = ({ onClose }: { onClose: () => void }) => {
     <form onSubmit={(e) => void handleSubmit(e)}>
       <SocialAuth />
       <div role="separator">
-        <span>or</span>
+        <span>{t("forgot_password.or")}</span>
       </div>
       <section>
         {saveState.type === "error" ? (
@@ -41,14 +43,14 @@ export const ForgotPasswordForm = ({ onClose }: { onClose: () => void }) => {
         ) : null}
         <fieldset>
           <legend>
-            <label htmlFor={uid}>Email to send reset instructions to</label>
+            <label htmlFor={uid}>{t("forgot_password.email_label")}</label>
           </legend>
           <input id={uid} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </fieldset>
         <Button color="primary" type="submit" disabled={saveState.type === "submitting"}>
-          {saveState.type === "submitting" ? "Sending..." : "Send"}
+          {saveState.type === "submitting" ? t("forgot_password.sending") : t("forgot_password.send")}
         </Button>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onClose}>{t("forgot_password.cancel")}</Button>
       </section>
     </form>
   );

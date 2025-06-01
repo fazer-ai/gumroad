@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { sendSubscribersReport } from "$app/data/audience";
 import { assertResponseError } from "$app/utils/request";
@@ -8,6 +9,7 @@ import { LoadingSpinner } from "$app/components/LoadingSpinner";
 import { showAlert } from "$app/components/server-components/Alert";
 
 export const ExportSubscribersPopover = ({ closePopover }: { closePopover: () => void }) => {
+  const { t } = useTranslation('common');
   const [loading, setLoading] = React.useState(false);
   const [followers, setFollowers] = React.useState(true);
   const [customers, setCustomers] = React.useState(false);
@@ -28,7 +30,7 @@ export const ExportSubscribersPopover = ({ closePopover }: { closePopover: () =>
       closePopover();
     } catch (error) {
       assertResponseError(error);
-      showAlert("Something went wrong.", "error");
+      showAlert(t("errors.something_went_wrong"), "error");
     }
 
     setLoading(false);

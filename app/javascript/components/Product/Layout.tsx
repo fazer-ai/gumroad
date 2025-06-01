@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { assertDefined } from "$app/utils/assert";
 import { assertResponseError, request, ResponseError } from "$app/utils/request";
@@ -61,6 +62,7 @@ const SectionEditor = ({
     return sections;
   });
 
+  const { t } = useTranslation('common');
   const saveSections = async (sections: EditableSection[]) => {
     setSections(sections);
     const order = sections.map((section) => section.id);
@@ -74,7 +76,7 @@ const SectionEditor = ({
         data: { sections: order, main_section_index: mainIndex },
       });
       if (!response.ok) throw new ResponseError();
-      showAlert("Changes saved!", "success");
+      showAlert(t("actions.changes_saved"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");
@@ -209,6 +211,7 @@ const CtaBar = ({
   selection: PriceSelection;
   hasHero: boolean;
 }) => {
+  const { t } = useTranslation('common');
   const selectionAttributes = applySelection(product, discountCode?.valid ? discountCode.discount : null, selection);
   let { priceCents } = selectionAttributes;
   const { discountedPriceCents, isPWYW, hasRentOption, hasMultipleRecurrences, hasConfigurableQuantity } =
@@ -310,7 +313,7 @@ const CtaBar = ({
               evt.preventDefault();
               ctaButtonRef.current?.scrollIntoView(false);
               configurationSelectorRef.current?.focusRequiredInput();
-              if (isPWYW && selection.price.value === null) showAlert("You must input an amount", "warning");
+              if (isPWYW && selection.price.value === null) showAlert(t("errors.must_input_amount"), "warning");
             }
           }}
         />

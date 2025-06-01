@@ -1,6 +1,7 @@
 import cx from "classnames";
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { CustomField, updateCheckoutForm } from "$app/data/checkout_form";
 import { RecommendationType } from "$app/data/recommended_products";
@@ -41,6 +42,7 @@ const FormPage = ({
   custom_fields: CustomField[];
   products: SimpleProduct[];
 }) => {
+  const { t } = useTranslation('common');
   const loggedInUser = useLoggedInUser();
 
   const cartItem = cart_item ?? PLACEHOLDER_CART_ITEM;
@@ -80,7 +82,7 @@ const FormPage = ({
     }
     setErrors(errors);
     if (errors.size) {
-      showAlert("Please complete all required fields.", "error");
+      showAlert(t("errors.please_complete_all_required_fields"), "error");
       return;
     }
     try {
@@ -90,7 +92,7 @@ const FormPage = ({
         customFields,
       });
       setCustomFields(response.custom_fields.map(addKey));
-      showAlert("Changes saved!", "success");
+      showAlert(t("actions.changes_saved"), "success");
     } catch (e) {
       assertResponseError(e);
       showAlert(e.message, "error");

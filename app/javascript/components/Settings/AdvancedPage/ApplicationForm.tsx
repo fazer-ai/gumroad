@@ -3,6 +3,7 @@ import cx from "classnames";
 import placeholderAppIcon from "images/gumroad_app.png";
 import * as React from "react";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import FileUtils from "$app/utils/file";
 import { getImageDimensionsFromFile } from "$app/utils/image";
@@ -17,6 +18,7 @@ import { WithTooltip } from "$app/components/WithTooltip";
 const ALLOWED_ICON_EXTENSIONS = ["jpeg", "jpg", "png"];
 
 const ApplicationForm = ({ application }: { application?: Application }) => {
+  const { t } = useTranslation('common');
   const [name, setName] = React.useState<{ value: string; error?: boolean }>({ value: application?.name ?? "" });
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isGeneratingToken, setIsGeneratingToken] = React.useState(false);
@@ -99,7 +101,7 @@ const ApplicationForm = ({ application }: { application?: Application }) => {
     if (!file) return;
     const dimensions = await getImageDimensionsFromFile(file).catch(() => null);
     if (!dimensions || !FileUtils.isFileNameExtensionAllowed(file.name, ALLOWED_ICON_EXTENSIONS)) {
-      showAlert("Invalid file type.", "error");
+      showAlert(t("errors.invalid_file_type"), "error");
       return;
     }
     setIsUploadingIcon(true);

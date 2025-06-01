@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 import { createCast } from "ts-safe-cast";
 
 import { login } from "$app/data/login";
@@ -23,6 +24,7 @@ export const LoginPage = ({
   application_name: string | null;
   recaptcha_site_key: string | null;
 }) => {
+  const { t } = useTranslation('authentication');
   const url = new URL(useOriginalLocation());
   const next = url.searchParams.get("next");
   const recaptcha = useRecaptcha({ siteKey: recaptcha_site_key });
@@ -56,9 +58,9 @@ export const LoginPage = ({
       header={
         <>
           <div className="actions">
-            <a href={Routes.signup_path({ next })}>Sign up</a>
+            <a href={Routes.signup_path({ next })}>{t("sign_up")}</a>
           </div>
-          <h1>{application_name ? `Connect ${application_name} to Gumroad` : "Log in"}</h1>
+          <h1>{application_name ? t("connect_app_to_gumroad", { appName: application_name }) : t("log_in")}</h1>
         </>
       }
     >
@@ -68,7 +70,7 @@ export const LoginPage = ({
         <form onSubmit={(e) => void handleSubmit(e)}>
           <SocialAuth />
           <div role="separator">
-            <span>or</span>
+            <span>{t("or")}</span>
           </div>
           <section>
             {saveState.type === "error" ? (
@@ -78,7 +80,7 @@ export const LoginPage = ({
             ) : null}
             <fieldset>
               <legend>
-                <label htmlFor={`${uid}-email`}>Email</label>
+                <label htmlFor={`${uid}-email`}>{t("email")}</label>
               </legend>
               <input
                 id={`${uid}-email`}
@@ -92,9 +94,9 @@ export const LoginPage = ({
             </fieldset>
             <fieldset>
               <legend>
-                <label htmlFor={`${uid}-password`}>Password</label>
+                <label htmlFor={`${uid}-password`}>{t("password")}</label>
                 <button type="button" className="link" onClick={() => setShowForgotPassword(true)}>
-                  Forgot your password?
+                  {t("forgot_password")}
                 </button>
               </legend>
               <input
@@ -107,7 +109,7 @@ export const LoginPage = ({
               />
             </fieldset>
             <Button color="primary" type="submit" disabled={saveState.type === "submitting"}>
-              {saveState.type === "submitting" ? "Logging in..." : "Login"}
+              {saveState.type === "submitting" ? t("logging_in") : t("login")}
             </Button>
           </section>
         </form>

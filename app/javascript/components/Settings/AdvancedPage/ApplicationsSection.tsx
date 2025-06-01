@@ -1,5 +1,6 @@
 import placeholderAppIcon from "images/gumroad_app.png";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { asyncVoid } from "$app/utils/promise";
 import { assertResponseError, request, ResponseError } from "$app/utils/request";
@@ -40,6 +41,7 @@ const ApplicationList = (props: { applications: Application[] }) => {
 };
 
 const ApplicationRow = ({ application, onRemove }: { application: Application; onRemove: () => void }) => {
+  const { t } = useTranslation('common');
   const deleteApp = asyncVoid(async () => {
     // eslint-disable-next-line no-alert
     if (!confirm("Delete this application forever?")) return;
@@ -51,11 +53,11 @@ const ApplicationRow = ({ application, onRemove }: { application: Application; o
         accept: "json",
       });
       if (!response.ok) throw new ResponseError();
-      showAlert("Application deleted.", "success");
+      showAlert(t("actions.application_deleted"), "success");
       onRemove();
     } catch (e) {
       assertResponseError(e);
-      showAlert("Failed to delete app.", "error");
+      showAlert(t("errors.failed_delete_app"), "error");
     }
   });
 

@@ -19,6 +19,7 @@ import {
 } from "react-router-dom";
 import { StaticRouterProvider } from "react-router-dom/server";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { updateAffiliateRequest, approvePendingAffiliateRequests } from "$app/data/affiliate_request";
 import {
@@ -177,25 +178,28 @@ const ApproveAllButton = ({
 }: {
   isLoading: boolean;
   setIsLoading: (newState: boolean) => void;
-}) => (
-  <Button
-    color="primary"
-    onClick={asyncVoid(async () => {
-      setIsLoading(true);
-      try {
-        await approvePendingAffiliateRequests();
-        showAlert("Approved", "success");
-      } catch (e) {
-        assertResponseError(e);
-        showAlert("Error approving affiliate requests", "error");
-      }
-      setIsLoading(false);
-    })}
-    disabled={isLoading}
-  >
-    {isLoading ? "Approving" : "Approve all"}
-  </Button>
-);
+}) => {
+  const { t } = useTranslation('common');
+  return (
+    <Button
+      color="primary"
+      onClick={asyncVoid(async () => {
+        setIsLoading(true);
+        try {
+          await approvePendingAffiliateRequests();
+          showAlert(t("actions.approved"), "success");
+        } catch (e) {
+          assertResponseError(e);
+          showAlert(t("errors.error_approving_affiliate_requests"), "error");
+        }
+        setIsLoading(false);
+      })}
+      disabled={isLoading}
+    >
+      {isLoading ? "Approving" : "Approve all"}
+    </Button>
+  );
+};
 
 const AffiliateRequestsTable = ({
   affiliateRequests: initialAffiliateRequests,
@@ -405,15 +409,16 @@ const AffiliatesTab = () => {
   const productTooltipLabel = (products: Affiliate["products"]) =>
     products.map((product) => `${product.name} (${formatAffiliateBasisPoints(product.fee_percent ?? 0)})`).join(", ");
 
+  const { t } = useTranslation('common');
   const remove = asyncVoid(async (affiliateId: string) => {
     try {
       await removeAffiliate(affiliateId);
       if (selectedAffiliate) setSelectedAffiliate(null);
       revalidator.revalidate();
-      showAlert("The affiliate was removed successfully.", "success");
+      showAlert(t("actions.affiliate_removed_successfully"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Failed to remove the affiliate.", "error");
+      showAlert(t("errors.failed_remove_affiliate"), "error");
     }
   });
 
@@ -666,6 +671,7 @@ type FormProps = {
 };
 
 const Form = ({ title, headerLabel, submitLabel }: FormProps) => {
+  const { t } = useTranslation('common');
   const affiliate = cast<AffiliateRequestPayload>(useLoaderData());
   const loggedInUser = useLoggedInUser();
   const navigate = useNavigate();
@@ -718,13 +724,13 @@ const Form = ({ title, headerLabel, submitLabel }: FormProps) => {
     if (errors.size > 0) return;
 
     if (!apply_to_all_products && products.every((product) => !product.enabled)) {
-      showAlert("Please enable at least one product.", "error");
+      showAlert(t("errors.please_enable_at_least_one_product"), "error");
       return;
     }
 
     try {
       await ("id" in affiliateState ? updateAffiliate(affiliateState) : addAffiliate(affiliateState));
-      showAlert("Changes saved!", "success");
+      showAlert(t("actions.changes_saved"), "success");
       navigate("/affiliates");
     } catch (e) {
       assertResponseError(e);

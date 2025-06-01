@@ -4,6 +4,7 @@ import * as React from "react";
 import { createBrowserRouter, RouteObject, RouterProvider } from "react-router-dom";
 import { StaticRouterProvider } from "react-router-dom/server";
 import { cast, createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { saveProduct } from "$app/data/product_edit";
 import { OtherRefundPolicy } from "$app/data/products/other_refund_policies";
@@ -133,6 +134,7 @@ const findUpdatedContent = (product: Product, lastSavedProduct: Product) => {
 };
 
 const ProductEditPage = (props: Props) => {
+  const { t } = useTranslation('common');
   const [product, setProduct] = React.useState(props.product);
   const [contentUpdates, setContentUpdates] = React.useState<ContentUpdates>(null);
 
@@ -171,7 +173,7 @@ const ProductEditPage = (props: Props) => {
             uniquePermalinkOrVariantIds,
           });
         } else {
-          showAlert("Changes saved!", "success");
+          showAlert(t("actions.changes_saved"), "success");
         }
         lastSavedProductRef.current = structuredClone(product);
       }

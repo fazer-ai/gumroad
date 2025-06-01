@@ -1,6 +1,7 @@
 import { parseISO } from "date-fns";
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { confirmLineItem } from "$app/data/purchase";
 import { cancelSubscriptionByUser, updateSubscription } from "$app/data/subscription";
@@ -106,6 +107,7 @@ const SubscriptionManager = ({
   ca_provinces,
   used_card,
 }: Props) => {
+  const { t } = useTranslation('common');
   const url = new URL(useOriginalLocation());
 
   const subscriptionEntity = subscription.is_installment_plan ? "installment plan" : "membership";
@@ -306,7 +308,7 @@ const SubscriptionManager = ({
     } catch (e) {
       assertResponseError(e);
       setCancellationStatus("initial");
-      showAlert("Sorry, something went wrong.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
   });
 

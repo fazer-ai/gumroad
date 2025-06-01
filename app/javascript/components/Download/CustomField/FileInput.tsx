@@ -1,5 +1,6 @@
 import { DirectUpload } from "@rails/activestorage";
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import FileUtils from "$app/utils/file";
 import { asyncVoid } from "$app/utils/promise";
@@ -13,6 +14,7 @@ import { usePurchaseCustomFields, usePurchaseInfo } from "$app/components/server
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 export const FileInput = ({ customFieldId }: { customFieldId: string }) => {
+  const { t } = useTranslation('common');
   const purchaseInfo = usePurchaseInfo();
   const purchaseCustomFields = usePurchaseCustomFields();
   const [isUploading, setIsUploading] = React.useState(false);
@@ -33,7 +35,7 @@ export const FileInput = ({ customFieldId }: { customFieldId: string }) => {
       const filesToUpload = Array.from(event.target.files);
 
       if (filesToUpload.some((file) => file.size > MAX_FILE_SIZE)) {
-        return showAlert("Files must be smaller than 10 MB", "error");
+        return showAlert(t("errors.files_must_be_smaller_than_10mb"), "error");
       }
 
       const signedIds = await Promise.all(
@@ -68,9 +70,9 @@ export const FileInput = ({ customFieldId }: { customFieldId: string }) => {
         })),
       ]);
 
-      showAlert("Files uploaded successfully!", "success");
+      showAlert(t("actions.files_uploaded_successfully"), "success");
     } catch {
-      showAlert("Error uploading files. Please try again.", "error");
+      showAlert(t("errors.error_uploading_files_try_again"), "error");
     } finally {
       setIsUploading(false);
     }

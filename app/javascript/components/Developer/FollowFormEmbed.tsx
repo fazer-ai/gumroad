@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { followFromEmbed } from "$app/data/follow_embed";
 import { asyncVoid } from "$app/utils/promise";
@@ -12,6 +13,7 @@ import { showAlert } from "$app/components/server-components/Alert";
 export const FOLLOW_FORM_EMBED_INPUT_ID = "gumroad-follow-form-embed-input";
 
 export const FollowFormEmbed = ({ sellerId, preview }: { sellerId: string; preview?: boolean }) => {
+  const { t } = useTranslation('common');
   const [email, setEmail] = React.useState("");
   const appDomain = useAppDomain();
   const followFormRef = React.useRef<HTMLDivElement & HTMLFormElement>(null);
@@ -64,10 +66,10 @@ export const FollowFormEmbed = ({ sellerId, preview }: { sellerId: string; previ
             evt.preventDefault();
             try {
               await followFromEmbed(sellerId, email);
-              showAlert("Check your inbox to confirm your follow request.", "success");
+              showAlert(t("actions.check_inbox_confirm_follow"), "success");
             } catch (e) {
               assertResponseError(e);
-              showAlert("Sorry, something went wrong. Please try again.", "error");
+              showAlert(t("errors.sorry_something_went_wrong"), "error");
             }
           })}
         >

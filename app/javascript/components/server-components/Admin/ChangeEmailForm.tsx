@@ -1,17 +1,20 @@
 import * as React from "react";
 import { createCast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { register } from "$app/utils/serverComponentUtil";
 
 import { Form } from "$app/components/Admin/Form";
 import { showAlert } from "$app/components/server-components/Alert";
 
-export const AdminChangeEmailForm = ({ user_id, current_email }: { user_id: number; current_email: string | null }) => (
-  <Form
-    url={Routes.update_email_admin_user_path(user_id)}
-    method="POST"
-    confirmMessage="Are you sure you want to update this user's email address?"
-    onSuccess={() => showAlert("Successfully updated email address.", "success")}
+export const AdminChangeEmailForm = ({ user_id, current_email }: { user_id: number; current_email: string | null }) => {
+  const { t } = useTranslation('common');
+  return (
+    <Form
+      url={Routes.update_email_admin_user_path(user_id)}
+      method="POST"
+      confirmMessage="Are you sure you want to update this user's email address?"
+      onSuccess={() => showAlert(t("actions.successfully_updated_email_address"), "success")}
   >
     {(isLoading) => (
       <fieldset>
@@ -24,7 +27,8 @@ export const AdminChangeEmailForm = ({ user_id, current_email }: { user_id: numb
         <small>This will update the user's email to this new one!</small>
       </fieldset>
     )}
-  </Form>
-);
+    </Form>
+  );
+};
 
 export default register({ component: AdminChangeEmailForm, propParser: createCast() });

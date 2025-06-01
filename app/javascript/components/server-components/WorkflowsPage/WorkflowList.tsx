@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Link, useLoaderData } from "react-router-dom";
 import { cast } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import { Workflow, deleteWorkflow } from "$app/data/workflows";
 import { formatStatNumber } from "$app/utils/formatStatNumber";
@@ -17,6 +18,7 @@ import { Layout } from "$app/components/server-components/WorkflowsPage";
 import placeholder from "$assets/images/placeholders/workflows.png";
 
 const WorkflowList = () => {
+  const { t } = useTranslation('common');
   const loggedInUser = useLoggedInUser();
   const { workflows: initialWorkflows } = cast<{ workflows: Workflow[] }>(useLoaderData());
   const [workflows, setWorkflows] = React.useState(initialWorkflows);
@@ -70,10 +72,10 @@ const WorkflowList = () => {
                           await deleteWorkflow(deletingWorkflow.id);
                           setWorkflows(workflows.filter((workflow) => workflow.external_id !== deletingWorkflow.id));
                           setDeletingWorkflow(null);
-                          showAlert("Workflow deleted!", "success");
+                          showAlert(t("actions.workflow_deleted"), "success");
                         } catch (e) {
                           assertResponseError(e);
-                          showAlert("Sorry, something went wrong. Please try again.", "error");
+                          showAlert(t("errors.sorry_something_went_wrong"), "error");
                         }
                       })}
                     >

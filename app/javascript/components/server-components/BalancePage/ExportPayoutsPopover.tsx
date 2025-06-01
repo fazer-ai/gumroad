@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { ExportablePayout, exportPayouts, getExportablePayouts } from "$app/data/balance";
 import { asyncVoid } from "$app/utils/promise";
@@ -12,6 +13,7 @@ import { showAlert } from "$app/components/server-components/Alert";
 import { useRunOnce } from "$app/components/useRunOnce";
 
 const ExportPayoutsPopoverContent = ({ closePopover }: { closePopover: () => void }) => {
+  const { t } = useTranslation('common');
   const currentYear = new Date().getFullYear();
   const [yearsWithPayouts, setYearsWithPayouts] = React.useState<number[]>([currentYear]);
   const [selectedYear, setSelectedYear] = React.useState<number>(currentYear);
@@ -66,10 +68,10 @@ const ExportPayoutsPopoverContent = ({ closePopover }: { closePopover: () => voi
     try {
       await exportPayouts(Array.from(selectedPayouts));
       closePopover();
-      showAlert("You will receive an email in your inbox shortly with the data you've requested.", "success");
+      showAlert(t("actions.export_email_sent"), "success");
     } catch (e) {
       assertResponseError(e);
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     }
 
     setIsDownloading(false);

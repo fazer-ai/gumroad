@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useTranslation } from "react-i18next";
 
 import { deleteProduct, archiveProduct, unarchiveProduct, duplicateProduct } from "$app/data/product_dashboard";
 import { Membership, Product } from "$app/data/products";
@@ -23,6 +24,7 @@ const ActionsPopover = ({
   onArchive: () => void;
   onUnarchive: (hasRemainingArchivedProducts: boolean) => void;
 }) => {
+  const { t } = useTranslation('dashboard');
   const [open, setOpen] = React.useState(false);
   const [isDuplicating, setIsDuplicating] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
@@ -32,10 +34,10 @@ const ActionsPopover = ({
 
   const handleDuplicate = async () => {
     setIsDuplicating(true);
-    showAlert("Duplicating the product. You will be notified once it's ready.", "info");
+    showAlert(t("actions.duplicating_notification"), "info");
     try {
       await duplicateProduct(product.permalink, product.name);
-      showAlert(`${product.name} is duplicated`, "success");
+      showAlert(t("actions.product_duplicated", { name: product.name }), "success");
       onDuplicate();
     } catch (e) {
       assertResponseError(e);
@@ -49,7 +51,7 @@ const ActionsPopover = ({
     setIsDeleting(true);
     try {
       await deleteProduct(product.permalink);
-      showAlert("Product deleted!", "success");
+      showAlert(t("actions.product_deleted"), "success");
       onDelete();
     } catch (e) {
       assertResponseError(e);
@@ -62,7 +64,7 @@ const ActionsPopover = ({
     setIsArchiving(true);
     try {
       await archiveProduct(product.permalink);
-      showAlert("Product was archived successfully", "success");
+      showAlert(t("actions.product_archived"), "success");
       onArchive();
     } catch (e) {
       assertResponseError(e);
@@ -75,7 +77,7 @@ const ActionsPopover = ({
     setIsUnarchiving(true);
     try {
       const archivedProductsCount = await unarchiveProduct(product.permalink);
-      showAlert("Product was unarchived successfully", "success");
+      showAlert(t("actions.product_unarchived"), "success");
       onUnarchive(archivedProductsCount > 0);
     } catch (e) {
       assertResponseError(e);
@@ -89,24 +91,24 @@ const ActionsPopover = ({
       <Popover
         open={open}
         onToggle={setOpen}
-        aria-label="Open product action menu"
+        aria-label={t("actions.open_product_menu")}
         trigger={<Icon name="three-dots" />}
       >
         <div role="menu">
           <div role="menuitem" inert={!product.can_duplicate || isDuplicating} onClick={() => void handleDuplicate()}>
             <Icon name="outline-duplicate" />
-            &ensp;{isDuplicating ? "Duplicating..." : "Duplicate"}
+            &ensp;{isDuplicating ? t("actions.duplicating") : t("actions.duplicate")}
           </div>
           {product.can_unarchive ? (
             <div role="menuitem" inert={isUnarchiving} onClick={() => void handleUnarchive()}>
               <Icon name="archive" />
-              &ensp;{isUnarchiving ? "Unarchiving..." : "Unarchive"}
+              &ensp;{isUnarchiving ? t("actions.unarchiving") : t("actions.unarchive")}
             </div>
           ) : null}
           {product.can_archive ? (
             <div role="menuitem" inert={isArchiving} onClick={() => void handleArchive()}>
               <Icon name="archive" />
-              &ensp;{isArchiving ? "Archiving..." : "Archive"}
+              &ensp;{isArchiving ? t("actions.archiving") : t("actions.archive")}
             </div>
           ) : null}
           <div
@@ -116,7 +118,7 @@ const ActionsPopover = ({
             onClick={() => setConfirmingDelete(true)}
           >
             <Icon name="trash2" />
-            &ensp;{isDeleting ? "Deleting..." : "Delete permanently"}
+            &ensp;{isDeleting ? t("actions.deleting") : t("actions.delete_permanently")}
           </div>
         </div>
       </Popover>
@@ -124,19 +126,19 @@ const ActionsPopover = ({
         <Modal
           open
           onClose={() => setConfirmingDelete(false)}
-          title="Delete Product"
+          title={t("actions.delete_product")}
           footer={
             <>
               <Button onClick={() => setConfirmingDelete(false)} disabled={isDeleting}>
-                Cancel
+                {t("actions.cancel")}
               </Button>
               <Button color="danger" onClick={() => void handleDelete()} disabled={isDeleting}>
-                {isDeleting ? "Deleting..." : "Confirm"}
+                {isDeleting ? t("actions.deleting") : t("actions.confirm")}
               </Button>
             </>
           }
         >
-          <h4>Are you sure you want to delete {product.name}?</h4>
+          <h4>{t("actions.confirm_delete_product", { name: product.name })}</h4>
         </Modal>
       ) : null}
     </>

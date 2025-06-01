@@ -2,6 +2,7 @@ import cx from "classnames";
 import * as React from "react";
 import { Link, useLoaderData, useNavigate } from "react-router-dom";
 import { cast, is } from "ts-safe-cast";
+import { useTranslation } from "react-i18next";
 
 import {
   createUtmLink,
@@ -41,6 +42,7 @@ type ErrorInfo = { attrName: FieldAttrName; message: string };
 const duplicatedTitle = (title?: string) => (title ? `${title} (copy)` : "");
 
 export const UtmLinkForm = () => {
+  const { t } = useTranslation('common');
   const { context, utm_link } = cast<{ context: UtmLinkFormContext; utm_link: UtmLink | null }>(useLoaderData());
   const isEditing = utm_link?.id !== undefined;
   const isDuplicating = utm_link !== null && utm_link.id === undefined;
@@ -121,7 +123,7 @@ export const UtmLinkForm = () => {
       const { permalink } = await getUniquePermalink();
       setShortUrl((shortUrl) => ({ ...shortUrl, permalink }));
     } catch {
-      showAlert("Sorry, something went wrong. Please try again.", "error");
+      showAlert(t("errors.sorry_something_went_wrong"), "error");
     } finally {
       setIsLoadingNewPermalink(false);
     }
@@ -203,10 +205,10 @@ export const UtmLinkForm = () => {
         await createUtmLink(requestPayload);
       }
 
-      showAlert(isEditing ? "Link updated!" : "Link created!", "success");
+      showAlert(isEditing ? t("actions.link_updated") : t("actions.link_created"), "success");
       navigate("/dashboard/utm_links");
     } catch (error) {
-      const genericMessage = "Sorry, something went wrong. Please try again.";
+      const genericMessage = t("errors.sorry_something_went_wrong");
       if (error instanceof ResponseError) {
         try {
           const { error: message, attr_name } = cast<{ error: string; attr_name: string | null }>(

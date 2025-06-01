@@ -1,5 +1,6 @@
 import cx from "classnames";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { CommunityChatMessage } from "$app/data/communities";
 import { asyncVoid } from "$app/utils/promise";
@@ -29,6 +30,7 @@ export const ChatMessage = ({
   isLast: boolean;
   communitySellerId: string;
 }) => {
+  const { t } = useTranslation('common');
   const userAgentInfo = useUserAgentInfo();
   const messageRef = React.useRef<HTMLDivElement>(null);
   const { markMessageAsRead, updateMessage, deleteMessage } = React.useContext(CommunityViewContext);
@@ -86,17 +88,17 @@ export const ChatMessage = ({
     setIsSaving(true);
     try {
       if (editedMessage.length < MIN_MESSAGE_LENGTH) {
-        showAlert(`Message must be at least ${MIN_MESSAGE_LENGTH} characters long.`, "error");
+        showAlert(t("errors.message_too_short", { minLength: MIN_MESSAGE_LENGTH }), "error");
         return;
       }
       if (editedMessage.length > MAX_MESSAGE_LENGTH) {
-        showAlert(`Message is too long.`, "error");
+        showAlert(t("errors.message_too_long"), "error");
         return;
       }
       await updateMessage(message.id, message.community_id, editedMessage);
       setIsEditing(false);
     } catch (_e: unknown) {
-      showAlert("Failed to update message.", "error");
+      showAlert(t("errors.failed_update_message"), "error");
     } finally {
       setIsSaving(false);
     }
