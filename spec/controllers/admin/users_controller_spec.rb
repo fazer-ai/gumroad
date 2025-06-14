@@ -144,4 +144,74 @@ describe Admin::UsersController do
       end
     end
   end
+
+  describe "POST 'add_credit'" do
+    before do
+      @user = create(:user)
+      @params = { id: @user.id,
+                  credit: {
+                    credit_amount: "100"
+                  } }
+    end
+
+    it "successfully creates a credit" do
+      expect { post :add_credit, params: @params }.to change { Credit.count }.from(0).to(1)
+      expect(Credit.last.amount_cents).to eq(10_000)
+      expect(Credit.last.user).to eq(@user)
+    end
+
+    it "creates a credit always associated with a gumroad merchant account" do
+      create(:merchant_account, user: @user)
+      @user.reload
+      post :add_credit, params: @params
+      expect(Credit.last.merchant_account).to eq(MerchantAccount.gumroad(StripeChargeProcessor.charge_processor_id))
+      expect(Credit.last.balance.merchant_account).to eq(MerchantAccount.gumroad(StripeChargeProcessor.charge_processor_id))
+    end
+
+    it "successfully creates credits even with smaller amounts" do
+      @params = { id: @user.id,
+                  credit: {
+                    credit_amount: ".04"
+                  } }
+      expect { post :add_credit, params: @params }.to change { Credit.count }.from(0).to(1)
+      expect(Credit.last.amount_cents).to eq(4)
+      expect(Credit.last.user).to eq(@user)
+    end
+
+    it "sends notification to user" do
+      @params = { id: @user.id,
+                  credit: {
+                    credit_amount: ".04"
+                  } }
+      mail_double = double
+      allow(mail_double).to receive(:deliver_later)
+      expect(ContactingCreatorMailer).to receive(:credit_notification).with(@user.id, 4).and_return(mail_double)
+      post :add_credit, params: @params
+    end
+  end
+
+  describe "POST #mark_compliant" do
+    let(:user) { create(:user) }
+
+    it "marks the user as compliant" do
+      post :mark_compliant, params: { id: user.id }
+      expect(response).to be_successful
+      expect(user.reload.user_risk_state).to eq "compliant"
+    end
+
+    it "creates a comment when marking compliant" do
+      freeze_time do
+        expect do
+          post :mark_compliant, params: { id: user.id }
+        end.to change(user.comments, :count).by(1)
+
+        comment = user.comments.last
+        expect(comment).to have_attributes(
+          comment_type: Comment::COMMENT_TYPE_COMPLIANT,
+          content: "Marked compliant by #{@admin_user.username} on #{Time.current.strftime('%B %-d, %Y')}",
+          author: @admin_user
+        )
+      end
+    end
+  end
 end

@@ -5,6 +5,7 @@ import ReactOnRails from "react-on-rails";
 
 import AdminActionButton from "$app/components/server-components/Admin/ActionButton";
 import AdminAddCommentForm from "$app/components/server-components/Admin/AddCommentForm";
+import AdminAddCreditForm from "$app/components/server-components/Admin/AddCreditForm";
 import AdminChangeEmailForm from "$app/components/server-components/Admin/ChangeEmailForm";
 import AdminFlagForFraudForm from "$app/components/server-components/Admin/FlagForFraudForm";
 import AdminManualPayoutForm from "$app/components/server-components/Admin/ManualPayoutForm";
@@ -52,6 +53,7 @@ import GenerateInvoiceConfirmationPage from "$app/components/server-components/G
 import GenerateInvoicePage from "$app/components/server-components/GenerateInvoicePage";
 import GumroadBlogIndexPage from "$app/components/server-components/GumroadBlog/IndexPage";
 import GumroadBlogPostPage from "$app/components/server-components/GumroadBlog/PostPage";
+import HelpCenterArticlesIndexPage from "$app/components/server-components/HelpCenter/ArticlesIndexPage";
 import LibraryPage from "$app/components/server-components/LibraryPage";
 import LoginPage from "$app/components/server-components/LoginPage";
 import Nav from "$app/components/server-components/Nav";
@@ -120,8 +122,10 @@ ReactOnRails.register({
   AffiliatesPage,
   Alert,
   AnalyticsPage,
+  AdminAddCreditForm,
   ApplicationEditPage,
   ArchivedProductsPage,
+  HelpCenterArticlesIndexPage,
   AudienceCustomersPage,
   AudiencePage,
   AuthorizedApplicationsSettingsPage,

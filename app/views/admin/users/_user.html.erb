@@ -11,21 +11,21 @@
           <% end %>
         </h2>
         <ul class="inline">
-          <li><%= format_relative_time(user.created_at) %></li>
+          <li><%= format_datetime_with_relative_tooltip(user.created_at) %></li>
           <% if user.username.present? %>
             <li><%= link_to user.username, user.subdomain_with_protocol, target: "_blank" %></li>
           <% end %>
           <% if user.form_email.present? %>
             <li>
               Email:
-              <%= mail_to(user.form_email) %>
+              <%= copy_to_clipboard(user.form_email) %>
               <%= blocked_email_tooltip(user.form_email) %>
             </li>
           <% end %>
           <% if user.support_email.present? %>
             <li>
               Support email:
-              <%= mail_to(user.support_email) %>
+              <%= copy_to_clipboard(user.support_email) %>
             </li>
           <% end %>
           <% if user.payments.any? %>
@@ -75,6 +75,14 @@
   <hr>
   <details>
     <summary>
+      <h3>Add credits</h3>
+    </summary>
+    <%= react_component "AdminAddCreditForm", props: { user_id: user.id }, prerender: true %>
+  </details>
+
+  <hr>
+  <details>
+    <summary>
       <h3>Mass-transfer purchases</h3>
     </summary>
     <%= react_component "AdminMassTransferPurchasesForm", props: { user_id: user.id }, prerender: true %>
@@ -87,8 +95,8 @@
   <hr>
   <dl>
     <dt>Updated</dt>
-    <dd><%= format_relative_time(user.updated_at) %></dd>
+    <dd><%= format_datetime_with_relative_tooltip(user.updated_at) %></dd>
     <dt>Deleted</dt>
-    <dd><%= format_relative_time(user.deleted_at, placeholder: icon_no) %></dd>
+    <dd><%= format_datetime_with_relative_tooltip(user.deleted_at, placeholder: icon_no) %></dd>
   </dl>
 </div>

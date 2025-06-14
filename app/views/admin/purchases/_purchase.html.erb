@@ -11,7 +11,7 @@
       <% end %>
     </h2>
     <ul class="inline">
-      <li><%= format_relative_time(purchase.created_at) %></li>
+      <li><%= format_datetime_with_relative_tooltip(purchase.created_at) %></li>
       <li><%= link_to(purchase.email, admin_search_purchases_path(query: purchase.email)) %></li>
     </ul>
   </div>
@@ -22,11 +22,11 @@
     <dl>
       <% if purchase.seller.support_email.present? %>
         <dt>Seller support email</dt>
-        <dd><%= mail_to purchase.seller.support_email %></dd>
+        <dd><%= copy_to_clipboard purchase.seller.support_email %></dd>
       <% end %>
 
       <dt>Seller email</dt>
-      <dd><%= mail_to purchase.seller.email %></dd>
+      <dd><%= copy_to_clipboard purchase.seller.email %></dd>
 
       <% if purchase.merchant_account %>
         <dt>Merchant account</dt>
@@ -361,8 +361,8 @@
   <hr>
   <dl>
     <dt>Updated</dt>
-    <dd><%= format_relative_time(purchase.updated_at) %></dd>
+    <dd><%= format_datetime_with_relative_tooltip(purchase.updated_at) %></dd>
     <dt>Deleted</dt>
-    <dd><%= format_relative_time(purchase.deleted_at, placeholder: icon_no) %></dd>
+    <dd><%= format_datetime_with_relative_tooltip(purchase.deleted_at, placeholder: icon_no) %></dd>
   </dl>
 </div>

@@ -30,11 +30,12 @@ module AdminHelper
     product.is_tiered_membership? ? "Membership" : "Subscription"
   end
 
-  def format_relative_time(value, placeholder: nil)
+  def format_datetime_with_relative_tooltip(value, placeholder: nil)
     return placeholder if value.nil?
 
     suffix = Time.current > value ? " ago" : " from now"
-    tag.span(time_ago_in_words(value) + suffix.html_safe, title: value)
+    relative_time = time_ago_in_words(value) + suffix
+    tag.span(value.strftime("%b %d, %Y at %l:%M %p").strip, title: relative_time)
   end
 
   def card_types_for_react
@@ -45,16 +46,11 @@ module AdminHelper
     return capture(&block) if tip.blank?
 
     uuid = SecureRandom.uuid
-    css_classes = ["has-tooltip", position]
-    tag.span(
-      safe_join(
-        [
-          tag.span(aria: { describedby: uuid }, &block),
-          tag.span(tip, role: "tooltip", id: uuid)
-        ]
-      ),
-      class: css_classes.compact.join(" ")
-    )
+
+    tag.span(class: ["has-tooltip", position]) do
+      concat tag.span(aria: { describedby: uuid }, &block)
+      concat tag.span(tip, role: "tooltip", id: uuid)
+    end
   end
 
   def blocked_email_tooltip(email)
@@ -74,5 +70,22 @@ module AdminHelper
 
   def admin_action(props)
     react_component("AdminActionButton", props:, prerender: true)
+  end
+
+  def copy_to_clipboard(text, &block)
+    tag.div(class: "inline-flex items-center gap-1") do
+      concat block_given? ? capture(&block) : tag.span(text)
+      concat(
+        with_tooltip(tip: "Copy to clipboard") do
+          tag.button(
+            type: "button",
+            aria: { label: "Copy to clipboard" },
+            data: { clipboard_text: text },
+          ) do
+            icon("outline-duplicate")
+          end
+        end
+      )
+    end
   end
 end
